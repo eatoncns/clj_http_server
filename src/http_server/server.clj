@@ -1,12 +1,11 @@
-(ns server.core
+(ns http-server.server
   (:require [clojure.java.io :as io])
-  (:import [java.net ServerSocket])
-  (:gen-class))
+  (:import [java.net ServerSocket]))
 
 (defn receive [socket]
   (.readLine (io/reader socket)))
 
-(defn send [socket, msg]
+(defn respond [socket, msg]
   (let [writer (io/writer socket)]
     (.write writer msg)
     (.flush writer)))
@@ -16,13 +15,12 @@
               sock (.accept server-sock)]
     (let [msg-in (receive sock)
           msg-out (handler msg-in)]
-      (send sock msg-out))))
+      (respond sock msg-out))))
 
 (defn static-response [_]
   "HTTP/1.1 200 OK
 
   Hello World")
 
-(defn -main
-  [& args]
-  (serve 5000 static-response))
+(defn start [port]
+  (serve port static-response))
