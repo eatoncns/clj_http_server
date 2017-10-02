@@ -1,4 +1,4 @@
-(ns server.core
+(ns http-server.core
   (:require [clojure.java.io :as io])
   (:import [java.net ServerSocket])
   (:gen-class))
