@@ -22,5 +22,5 @@
 
   Hello World")
 
-(defn start []
-  (serve 5000 static-response))
+(defn start [port]
+  (serve port static-response))
