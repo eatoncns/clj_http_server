@@ -19,6 +19,5 @@
 
 (defn -main
   [& args]
-  (server/start 5000))
-;  (let [options (get-opts args)]
-;      (server/start (:port options))))
+  (let [options (get-opts args)]
+    (server/start (:port options))))
