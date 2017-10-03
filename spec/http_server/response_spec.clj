@@ -4,13 +4,13 @@
 
 (describe "build"
 
- (it "builds response beginning with status line"
-   (let [response (map->Response {:status 200 :body "Whatever"})
-         raw-response (build response)]
-     (should-contain #"^HTTP/1\.1 200 OK.*" raw-response)))
+  (it "builds response beginning with status line"
+    (->> (map->Response {:status 200 :body "Whatever"})
+         (build)
+         (should-contain #"^HTTP/1\.1 200 OK.*")))
 
- (it "builds response ending with body"
-   (let [response (map->Response {:status 200 :body "Whatever"})
-         raw-response (build response)]
-     (should-contain #".*\r\n\r\nWhatever$" raw-response)))
+  (it "builds response ending with body"
+    (->> (map->Response {:status 200 :body "Whatever"})
+         (build)
+         (should-contain #".*\r\n\r\nWhatever$")))
 )
