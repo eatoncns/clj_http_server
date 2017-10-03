@@ -11,11 +11,14 @@
     (.flush writer)))
 
 (defn serve [port, handler]
-  (with-open [server-sock (ServerSocket. port)
-              sock (.accept server-sock)]
-    (let [msg-in (receive sock)
-          msg-out (handler msg-in)]
-      (respond sock msg-out))))
+  (with-open [server-sock (ServerSocket. port)]
+    (loop []
+      (let [sock (.accept server-sock)
+            msg-in (receive sock)
+            msg-out (handler msg-in)]
+        (respond sock msg-out)
+        (.close sock)
+        (recur)))))
 
 (defn static-response [_]
   "HTTP/1.1 200 OK
@@ -23,4 +26,5 @@
   Hello World")
 
 (defn start [port]
+  (println (str "Serving at port " port))
   (serve port static-response))
