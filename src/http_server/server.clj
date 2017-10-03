@@ -1,14 +1,14 @@
 (ns http-server.server
   (:require [clojure.java.io :as io]
-            [http-server.request :as req]
-            [http-server.processor :as proc]
-            [http-server.response :as res])
+            [http-server.request :as request]
+            [http-server.processor :as processor]
+            [http-server.response :as response])
   (:import [java.net ServerSocket]))
 
-(defn receive [socket]
+(defn read-request [socket]
   (.readLine (io/reader socket)))
 
-(defn respond [socket, msg]
+(defn send-response [msg, socket]
   (let [writer (io/writer socket)]
     (.write writer msg)
     (.flush writer)))
@@ -16,13 +16,13 @@
 (defn serve [port, directory-served]
   (with-open [server-sock (ServerSocket. port)]
     (loop []
-      (let [sock (.accept server-sock)
-            raw-request (receive sock)
-            request (req/parse raw-request)
-            response (proc/process request directory-served)
-            raw-response (res/build response)]
-        (respond sock raw-response)
-        (.close sock)
+      (let [sock (.accept server-sock)]
+        (-> sock
+            (read-request)
+            (request/parse)
+            (processor/process directory-served)
+            (response/build)
+            (send-response sock))
         (recur)))))
 
 (defn start [port, directory-served]
