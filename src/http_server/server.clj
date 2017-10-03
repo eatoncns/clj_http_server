@@ -1,5 +1,6 @@
 (ns http-server.server
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [http-server.request :as req])
   (:import [java.net ServerSocket]))
 
 (defn receive [socket]
@@ -10,21 +11,17 @@
     (.write writer msg)
     (.flush writer)))
 
-(defn serve [port, handler]
+(defn serve [port]
   (with-open [server-sock (ServerSocket. port)]
     (loop []
       (let [sock (.accept server-sock)
-            msg-in (receive sock)
-            msg-out (handler msg-in)]
-        (respond sock msg-out)
+            raw-request (receive sock)
+            request (req/parse raw-request)
+            response (req/process request)]
+        (respond sock response)
         (.close sock)
         (recur)))))
 
-(defn static-response [_]
-  "HTTP/1.1 200 OK
-
-  Hello World")
-
 (defn start [port]
   (println (str "Serving at port " port))
-  (serve port static-response))
+  (serve port))
