@@ -20,4 +20,4 @@
 (defn -main
   [& args]
   (let [options (get-opts args)]
-    (server/start (:port options))))
+    (server/start (:port options) (:directory options))))

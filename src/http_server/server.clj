@@ -11,17 +11,17 @@
     (.write writer msg)
     (.flush writer)))
 
-(defn serve [port]
+(defn serve [port, directory-served]
   (with-open [server-sock (ServerSocket. port)]
     (loop []
       (let [sock (.accept server-sock)
             raw-request (receive sock)
             request (req/parse raw-request)
-            response (req/process request)]
+            response (req/process request directory-served)]
         (respond sock response)
         (.close sock)
         (recur)))))
 
-(defn start [port]
-  (println (str "Serving at port " port))
-  (serve port))
+(defn start [port, directory-served]
+  (println (str "Serving " directory-served " at port " port))
+  (serve port directory-served))

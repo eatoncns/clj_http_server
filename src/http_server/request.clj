@@ -8,5 +8,5 @@
         [method uri version] (str/split request-line #" " 3)]
     (map->Request {:method method :uri uri})))
 
-(defn process [request]
+(defn process [request directory-served]
   "HTTP/1.1 200 OK\r\n\r\nHello World")
