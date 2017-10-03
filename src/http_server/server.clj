@@ -1,6 +1,8 @@
 (ns http-server.server
   (:require [clojure.java.io :as io]
-            [http-server.request :as req])
+            [http-server.request :as req]
+            [http-server.processor :as proc]
+            [http-server.response :as res])
   (:import [java.net ServerSocket]))
 
 (defn receive [socket]
@@ -17,8 +19,9 @@
       (let [sock (.accept server-sock)
             raw-request (receive sock)
             request (req/parse raw-request)
-            response (req/process request directory-served)]
-        (respond sock response)
+            response (proc/process request directory-served)
+            raw-response (res/build response)]
+        (respond sock raw-response)
         (.close sock)
         (recur)))))
 
