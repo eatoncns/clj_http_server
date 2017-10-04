@@ -3,21 +3,27 @@
             [http-server.processor :refer :all]
             [http-server.file-info :as fi]))
 
-(defrecord FakeFileInfo [exists]
+(defrecord FakeFileInfo []
   fi/FileInfo
-  (file-exists? [this path] (:exists this)))
+  (file-exists? [this path] (= path "/foo")))
 
 (describe "process-get"
 
   (it "returns 404 when file does not exist"
-    (-> (map->FakeFileInfo {:exists false})
-        (process-get "/foo")
+    (-> (FakeFileInfo.)
+        (process-get "/foobar")
         (get :status)
         (should= 404)))
 
-  (it "returns 200 when file does not exist"
-    (-> (map->FakeFileInfo {:exists true})
+  (it "returns 200 when file exists"
+    (-> (FakeFileInfo.)
         (process-get "/foo")
         (get :status)
         (should= 200)))
+
+  ;(it "returns file contents as body when file exists"
+  ;  (-> (map->FakeFileInfo {:exists true})
+  ;      (process-get "/foo")
+  ;      (get :status)
+  ;      (should= 200)))
 )
