@@ -23,5 +23,8 @@
   (let [{:keys [status body]} response
         status-line (build-status-line status)
         crlf-line "\r\n"
-        non-body (str status-line crlf-line)]
-    (b-concat (.getBytes non-body) body)))
+        non-body (str status-line crlf-line)
+        non-body-bytes (.getBytes non-body)]
+    (if (nil? body)
+      non-body-bytes
+      (b-concat non-body-bytes body))))

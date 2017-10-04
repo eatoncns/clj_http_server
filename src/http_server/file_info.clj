@@ -9,7 +9,7 @@
 (defrecord FileInfoAtRoot [root]
   FileInfo
   (file-exists? [this path]
-      (.exists (io/file (str root path))))
+    (.isFile (io/as-file (str root path))))
 
   (file-data [this path]
     (let [file (java.io.File. (str root path))
