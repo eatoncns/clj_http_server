@@ -10,10 +10,9 @@
   (.readLine (io/reader socket)))
 
 (defn- send-response [msg, socket]
-  (let [writer (io/writer socket)]
-    (.write writer msg)
-    (.flush writer)
-    (.close socket)))
+  (with-open [writer (io/output-stream socket)]
+    (.write writer msg))
+  (.close socket))
 
 (defn- handle-request [directory-served, socket]
   (-> socket
