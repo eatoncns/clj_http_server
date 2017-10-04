@@ -5,7 +5,8 @@
 
 (defrecord FakeFileInfo []
   fi/FileInfo
-  (file-exists? [this path] (= path "/foo")))
+  (file-exists? [this path] (= path "/foo"))
+  (file-data [this path] "blah"))
 
 (describe "process-get"
 
@@ -21,9 +22,9 @@
         (get :status)
         (should= 200)))
 
-  ;(it "returns file contents as body when file exists"
-  ;  (-> (map->FakeFileInfo {:exists true})
-  ;      (process-get "/foo")
-  ;      (get :status)
-  ;      (should= 200)))
+  (it "returns file contents as body when file exists"
+    (-> (FakeFileInfo.)
+        (process-get "/foo")
+        (get :body)
+        (should= "blah")))
 )
