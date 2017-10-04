@@ -11,7 +11,8 @@
 (defn send-response [msg, socket]
   (let [writer (io/writer socket)]
     (.write writer msg)
-    (.flush writer)))
+    (.flush writer)
+    (.close socket)))
 
 (defn serve [port, directory-served]
   (with-open [server-sock (ServerSocket. port)]
