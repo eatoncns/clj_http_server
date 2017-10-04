@@ -1,5 +1,6 @@
 (ns http-server.file-info
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io])
+  (:import [java.io File FileInputStream]))
 
 (defprotocol FileInfo
   (file-exists? [this path])
@@ -11,4 +12,10 @@
       (.exists (io/file (str root path))))
 
   (file-data [this path]
-    (slurp (str root path))))
+    (let [file (java.io.File. (str root path))
+          array (byte-array (.length file))
+          input-stream (java.io.FileInputStream. file)]
+      (.read input-stream array)
+      (.close input-stream)
+      array))
+)

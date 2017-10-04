@@ -10,6 +10,6 @@
     (Response. 404 nil)))
 
 (defn process [request directory-served]
-  (if (= (:method request) "GET")
+  (if (not= (:uri request) "/")
     (process-get (FileInfoAtRoot. directory-served) (:uri request))
-    (Response. 200 "Hello World")))
+    (Response. 200 (.getBytes "Hello World"))))
