@@ -3,28 +3,25 @@
 
 (defrecord Response [status body])
 
-; TODO move somewhere more appropriate
-(defn b-concat [lhs rhs]
-  (let [lhs-len (alength lhs)
-       rhs-len (alength rhs)
-       writer (ByteArrayOutputStream. (+ lhs-len rhs-len))]
-    (.write writer lhs 0 lhs-len)
-    (.write writer rhs 0 rhs-len)
-    (.toByteArray writer)))
-
 (def reasons { 200 "OK"
                404 "Not Found"})
+(def crlf "\r\n")
 
 (defn build-status-line [status]
- (str "HTTP/1.1 " status " " (get reasons status) "\r\n"))
+ (str "HTTP/1.1 " status " " (get reasons status) crlf))
+
+(defn write [writer line]
+  (if (some? line)
+    (.write writer line 0 (alength line))))
+
+(defn write-string [writer input]
+  (write writer (.getBytes input)))
 
 (defn build
   [response]
   (let [{:keys [status body]} response
-        status-line (build-status-line status)
-        crlf-line "\r\n"
-        non-body (str status-line crlf-line)
-        non-body-bytes (.getBytes non-body)]
-    (if (nil? body)
-      non-body-bytes
-      (b-concat non-body-bytes body))))
+        writer (ByteArrayOutputStream.)]
+    (write-string writer (build-status-line status))
+    (write-string writer crlf)
+    (write writer body)
+    (.toByteArray writer)))
