@@ -1,7 +1,23 @@
 (ns http-server.router-spec
   (:require [speclj.core :refer :all]
             [http-server.router :refer :all]
-            [http-server.file-info :as fi]))
+            [http-server.file-info :as fi]
+            [http-server.request])
+  (:import [http_server.router DefaultGET Default]
+           [http_server.request Request]))
+
+(describe "route"
+  (it "returns a DefaultGET for GET request"
+    (->> (Request. "GET" "/whatever")
+         (route)
+         (should-be-a DefaultGET)))
+
+
+  (it "returns a Default for other requests"
+    (->> (Request. "POST" "/whatever")
+         (route)
+         (should-be-a Default)))
+)
 
 (defrecord FakeFileInfo []
   fi/FileInfo
