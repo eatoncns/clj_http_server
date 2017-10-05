@@ -32,5 +32,5 @@
 (def route-constructors [->DefaultGET ->Default])
 
 (defn route [request]
-  (let [routes (map (fn [route-constructor] (route-constructor request)) route-constructors)]
-    (first (filter (fn [route] (is-applicable route)) routes))))
+  (let [routes (map #(%1 request) route-constructors)]
+    (first (filter is-applicable routes))))
