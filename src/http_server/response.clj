@@ -8,7 +8,7 @@
 
 (def crlf "\r\n")
 
-(defn build-status-line [status]
+(defn- build-status-line [status]
  (str "HTTP/1.1 " status " " (get reasons status) crlf))
 
 (defprotocol WriteBytes
