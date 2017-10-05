@@ -18,7 +18,8 @@
   (-> socket
       (read-request)
       (request/parse)
-      (router/route directory-served)
+      (router/route)
+      (router/process directory-served)
       (response/build)
       (send-response socket)))
 
