@@ -1,7 +1,7 @@
 (ns http-server.server
   (:require [clojure.java.io :as io]
             [http-server.request :as request]
-            [http-server.processor :as processor]
+            [http-server.router :as router]
             [http-server.response :as response])
   (:import [java.net ServerSocket]
            [java.util.concurrent Executors]))
@@ -18,7 +18,7 @@
   (-> socket
       (read-request)
       (request/parse)
-      (processor/process directory-served)
+      (router/route directory-served)
       (response/build)
       (send-response socket)))
 
