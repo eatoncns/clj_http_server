@@ -1,9 +1,11 @@
 (ns http-server.router-spec
   (:require [speclj.core :refer :all]
             [http-server.router :refer :all]
-            [http-server.file-info :as fi]
+            [http-server.routes.default-get]
+            [http-server.routes.default]
             [http-server.request])
-  (:import [http_server.router DefaultGET Default]
+  (:import [http_server.routes.default_get DefaultGET]
+           [http_server.routes.default Default]
            [http_server.request Request]))
 
 (describe "route"
@@ -19,28 +21,3 @@
          (should-be-a Default)))
 )
 
-(defrecord FakeFileInfo []
-  fi/FileInfo
-  (file-exists? [this path] (= path "/foo"))
-  (file-data [this path] "blah"))
-
-(describe "process-get"
-
-  (it "returns 404 when file does not exist"
-    (-> (FakeFileInfo.)
-        (process-get "/foobar")
-        (get :status)
-        (should= 404)))
-
-  (it "returns 200 when file exists"
-    (-> (FakeFileInfo.)
-        (process-get "/foo")
-        (get :status)
-        (should= 200)))
-
-  (it "returns file contents as body when file exists"
-    (-> (FakeFileInfo.)
-        (process-get "/foo")
-        (get :body)
-        (should= "blah")))
-)
