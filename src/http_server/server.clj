@@ -12,17 +12,18 @@
 
 (defn- send-response [msg, socket]
   (with-open [writer (io/output-stream socket)]
-    (.write writer msg))
-  (.close socket))
+    (.write writer msg)))
 
 (defn- handle-request [directory-served, socket]
-  (-> socket
-      (read-request)
-      (request/parse)
-      (router/route)
-      (route/process directory-served)
-      (response/build)
-      (send-response socket)))
+  (try
+    (-> socket
+        (read-request)
+        (request/parse)
+        (router/route)
+        (route/process directory-served)
+        (response/build)
+        (send-response socket))
+    (finally (.close socket))))
 
 (defn- serve [port, directory-served]
   (let [thread-pool (Executors/newFixedThreadPool 20)
