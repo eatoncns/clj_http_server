@@ -1,4 +1,5 @@
 (ns http-server.response
+  (:require [http-server.utils.bytes :as bytes])
   (:import [java.io ByteArrayOutputStream]))
 
 (defrecord Response [status body])
@@ -11,26 +12,11 @@
 (defn- build-status-line [status]
  (str "HTTP/1.1 " status " " (get reasons status) crlf))
 
-(defprotocol WriteBytes
-  (write-bytes [x writer]))
-
-(extend-protocol WriteBytes
-  (Class/forName "[B")
-  (write-bytes [x writer]
-    (.write writer x 0 (alength x))
-     writer)
-
-  nil
-  (write-bytes [x, writer] writer)
-
-  java.lang.String
-  (write-bytes [x writer] (write-bytes (.getBytes x) writer)))
-
 (defn build
   [response]
   (let [{:keys [status body]} response]
     (->> (ByteArrayOutputStream.)
-         (write-bytes (build-status-line status))
-         (write-bytes crlf)
-         (write-bytes body)
+         (bytes/write (build-status-line status))
+         (bytes/write crlf)
+         (bytes/write body)
          (.toByteArray))))
