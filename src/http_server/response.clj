@@ -5,23 +5,32 @@
 
 (def reasons { 200 "OK"
                404 "Not Found"})
+
 (def crlf "\r\n")
 
 (defn build-status-line [status]
  (str "HTTP/1.1 " status " " (get reasons status) crlf))
 
-(defn write [writer line]
-  (if (some? line)
-    (.write writer line 0 (alength line))))
+(defprotocol WriteBytes
+  (write-bytes [x writer]))
 
-(defn write-string [writer input]
-  (write writer (.getBytes input)))
+(extend-protocol WriteBytes
+  (Class/forName "[B")
+  (write-bytes [x writer]
+    (.write writer x 0 (alength x))
+     writer)
+
+  nil
+  (write-bytes [x, writer] writer)
+
+  java.lang.String
+  (write-bytes [x writer] (write-bytes (.getBytes x) writer)))
 
 (defn build
   [response]
-  (let [{:keys [status body]} response
-        writer (ByteArrayOutputStream.)]
-    (write-string writer (build-status-line status))
-    (write-string writer crlf)
-    (write writer body)
-    (.toByteArray writer)))
+  (let [{:keys [status body]} response]
+    (->> (ByteArrayOutputStream.)
+         (write-bytes (build-status-line status))
+         (write-bytes crlf)
+         (write-bytes body)
+         (.toByteArray))))
