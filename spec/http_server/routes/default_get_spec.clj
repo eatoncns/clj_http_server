@@ -1,6 +1,6 @@
-(ns http-server.processor-spec
+(ns http-server.router-spec
   (:require [speclj.core :refer :all]
-            [http-server.processor :refer :all]
+            [http-server.routes.default-get :refer :all]
             [http-server.file-info :as fi]))
 
 (defrecord FakeFileInfo []
