@@ -1,9 +1,9 @@
 (ns http-server.routes.default-get
   (:require [http-server.response]
-            [http-server.file-info :as fi]
+            [http-server.utils.file-info :as fi]
             [http-server.routes.route :as route])
   (:import [http_server.response Response]
-           [http_server.file_info FileInfoAtRoot]))
+           [http_server.utils.file_info FileInfoAtRoot]))
 
 (defn process-get [file-info, path]
   (if (fi/file-exists? file-info path)

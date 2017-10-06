@@ -1,7 +1,7 @@
 (ns http-server.router-spec
   (:require [speclj.core :refer :all]
             [http-server.routes.default-get :refer :all]
-            [http-server.file-info :as fi]))
+            [http-server.utils.file-info :as fi]))
 
 (defrecord FakeFileInfo []
   fi/FileInfo

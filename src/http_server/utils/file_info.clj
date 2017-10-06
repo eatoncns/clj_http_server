@@ -1,4 +1,4 @@
-(ns http-server.file-info
+(ns http-server.utils.file-info
   (:require [clojure.java.io :as io])
   (:import [java.io File FileInputStream]))
 
