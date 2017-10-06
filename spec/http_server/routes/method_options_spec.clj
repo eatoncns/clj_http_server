@@ -31,4 +31,3 @@
         (get-in [:headers "Allow"])
         (should= "GET,HEAD,POST,OPTIONS,PUT")))
 )
-

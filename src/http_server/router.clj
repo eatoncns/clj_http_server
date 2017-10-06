@@ -5,9 +5,16 @@
             [http-server.routes.tea :refer [->Tea]]
             [http-server.routes.redirect :refer [->Redirect]]
             [http-server.routes.method-options :refer [->MethodOptions]]
+            [http-server.routes.method-options2 :refer [->MethodOptions2]]
             [http-server.routes.route :as route]))
 
-(def route-constructors [->MethodOptions ->Redirect ->Tea ->Coffee ->DefaultGET ->Default])
+(def route-constructors [->MethodOptions
+                         ->MethodOptions2
+                         ->Redirect
+                         ->Tea
+                         ->Coffee
+                         ->DefaultGET
+                         ->Default])
 
 (defn route [request]
   (let [routes (map #(%1 request) route-constructors)]
