@@ -10,5 +10,5 @@
          (= (get-in this [:request :method]) "GET")))
 
   (process [this directory-served]
-    (Response. 200 nil))
+    (Response. 200 {} nil))
 )

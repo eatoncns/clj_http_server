@@ -9,4 +9,4 @@
     true)
 
   (process [this _]
-    (Response. 200 (.getBytes "Hello World"))))
+    (Response. 200 {} (.getBytes "Hello World"))))
