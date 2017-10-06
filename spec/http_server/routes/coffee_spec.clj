@@ -15,7 +15,7 @@
         (should= false)))
 
   (it "returns false for methods other than GET"
-    (doseq [method ["POST" "HEAD" "PUT" "OPTION"]]
+    (doseq [method ["POST" "HEAD" "PUT" "OPTIONS"]]
       (-> (map->Coffee{:request {:method method :uri "/coffee"}})
           (route/is-applicable)
           (should= false))))

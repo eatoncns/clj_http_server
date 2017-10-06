@@ -6,12 +6,14 @@
             [http-server.routes.coffee]
             [http-server.routes.tea]
             [http-server.routes.redirect]
+            [http-server.routes.method-options]
             [http-server.request])
   (:import [http_server.routes.default_get DefaultGET]
            [http_server.routes.default Default]
            [http_server.routes.coffee Coffee]
            [http_server.routes.tea Tea]
            [http_server.routes.redirect Redirect]
+           [http_server.routes.method_options MethodOptions]
            [http_server.request Request]))
 
 (describe "route"
@@ -30,6 +32,11 @@
     (->> (Request. "GET" "/redirect")
          (route)
          (should-be-a Redirect)))
+
+  (it "returns a MethodOptions for OPTIONS to /method_options"
+    (->> (Request. "OPTIONS" "/method_options")
+         (route)
+         (should-be-a MethodOptions)))
 
   (it "returns a DefaultGET for GET request"
     (->> (Request. "GET" "/whatever")

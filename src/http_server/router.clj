@@ -4,9 +4,10 @@
             [http-server.routes.coffee :refer [->Coffee]]
             [http-server.routes.tea :refer [->Tea]]
             [http-server.routes.redirect :refer [->Redirect]]
+            [http-server.routes.method-options :refer [->MethodOptions]]
             [http-server.routes.route :as route]))
 
-(def route-constructors [->Redirect ->Tea ->Coffee ->DefaultGET ->Default])
+(def route-constructors [->MethodOptions ->Redirect ->Tea ->Coffee ->DefaultGET ->Default])
 
 (defn route [request]
   (let [routes (map #(%1 request) route-constructors)]
