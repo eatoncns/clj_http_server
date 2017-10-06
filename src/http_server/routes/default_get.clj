@@ -9,11 +9,11 @@
 (defn process-get [path, file-info]
   (cond
     (fi/is-directory? file-info path)
-      (Response. 200 (html/list-of-links (fi/list-files file-info path)))
+      (Response. 200 {} (html/list-of-links (fi/list-files file-info path)))
     (fi/file-exists? file-info path)
-      (Response. 200 (fi/file-data file-info path))
+      (Response. 200 {} (fi/file-data file-info path))
     :else
-      (Response. 404 nil)))
+      (Response. 404 {} nil)))
 
 (defrecord DefaultGET [request]
   route/Route

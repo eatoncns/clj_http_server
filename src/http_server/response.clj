@@ -2,7 +2,7 @@
   (:require [http-server.utils.bytes :as bytes])
   (:import [java.io ByteArrayOutputStream]))
 
-(defrecord Response [status body])
+(defrecord Response [status headers body])
 
 (def reasons { 200 "OK"
                404 "Not Found"})
