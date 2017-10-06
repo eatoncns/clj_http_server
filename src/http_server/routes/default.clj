@@ -1,5 +1,5 @@
 (ns http-server.routes.default
-  (:require [http-server.response]
+  (:require [http-server.response :refer [map->Response]]
             [http-server.routes.route :as route])
   (:import [http_server.response Response]))
 
@@ -9,4 +9,4 @@
     true)
 
   (process [this _]
-    (Response. 200 {} (.getBytes "Hello World"))))
+    (map->Response {:status 200 :headers {} :body "Hello World"})))

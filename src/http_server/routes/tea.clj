@@ -1,6 +1,6 @@
 (ns http-server.routes.tea
   (:require [http-server.routes.route :as route]
-            [http-server.response])
+            [http-server.response :refer [map->Response]])
   (:import [http_server.response Response]))
 
 (defrecord Tea [request]
@@ -10,5 +10,5 @@
          (= (get-in this [:request :method]) "GET")))
 
   (process [this directory-served]
-    (Response. 200 {} nil))
+    (map->Response {:status 200 :headers {} :body nil}))
 )

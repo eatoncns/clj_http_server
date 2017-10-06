@@ -8,6 +8,11 @@
 (def reasons { 200 "OK"
                404 "Not Found"})
 
+(def content-types {:html "text/html"})
+
+(defn content-type [shorthand]
+  {"Content-Type" (get content-types shorthand)})
+
 (def crlf "\r\n")
 
 (defn- build-status-line [status]
