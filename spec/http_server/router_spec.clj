@@ -5,11 +5,13 @@
             [http-server.routes.default]
             [http-server.routes.coffee]
             [http-server.routes.tea]
+            [http-server.routes.redirect]
             [http-server.request])
   (:import [http_server.routes.default_get DefaultGET]
            [http_server.routes.default Default]
            [http_server.routes.coffee Coffee]
            [http_server.routes.tea Tea]
+           [http_server.routes.redirect Redirect]
            [http_server.request Request]))
 
 (describe "route"
@@ -23,6 +25,11 @@
     (->> (Request. "GET" "/coffee")
          (route)
          (should-be-a Coffee)))
+
+  (it "returns a Redirect for GET to /redirect"
+    (->> (Request. "GET" "/redirect")
+         (route)
+         (should-be-a Redirect)))
 
   (it "returns a DefaultGET for GET request"
     (->> (Request. "GET" "/whatever")
