@@ -8,19 +8,12 @@
 
 (describe "parse"
 
-  (it "parses GET method"
+  (it "parses method"
     (->> "GET / HTTP/1.1\r\n\r\n"
          (as-reader)
          (parse)
          (:method)
          (should= "GET")))
-
-  (it "parses POST method"
-    (->> "POST / HTTP/1.1\r\n\r\n"
-         (as-reader)
-         (parse)
-         (:method)
-         (should= "POST")))
 
   (it "parses URI"
     (->> "GET /foo HTTP/1.1\r\n\r\n"
@@ -35,4 +28,11 @@
          (parse)
          (:version)
          (should= "HTTP/1.1")))
+
+  (it "parses headers"
+    (->> "GET /foo HTTP/1.1\r\nHost: localhost\r\nConnection: Keep-Alive\r\n\r\n"
+         (as-reader)
+         (parse)
+         (:headers)
+         (should== {"Connection" "Keep-Alive" "Host" "localhost"})))
 )
