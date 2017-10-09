@@ -1,6 +1,7 @@
 (ns http-server.server
   (:require [clojure.java.io :as io]
             [http-server.request :as request]
+            [http-server.logger :as logger]
             [http-server.router :as router]
             [http-server.routes.route :as route]
             [http-server.response :as response])
@@ -18,6 +19,7 @@
   (try
     (-> socket
         (read-request)
+        (logger/log)
         (request/parse)
         (router/route)
         (route/process directory-served)
