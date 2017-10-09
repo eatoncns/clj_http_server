@@ -8,7 +8,7 @@
             [http-server.routes.redirect]
             [http-server.routes.method-options]
             [http-server.routes.method-options2]
-            [http-server.request])
+            [http-server.request :refer [map->Request]])
   (:import [http_server.routes.default_get DefaultGET]
            [http_server.routes.default Default]
            [http_server.routes.coffee Coffee]
@@ -18,41 +18,44 @@
            [http_server.routes.method_options2 MethodOptions2]
            [http_server.request Request]))
 
+(defn build-request [method uri]
+  (map->Request {:method method :uri uri :version "HTTP/1.1" :headers {}}))
+
 (describe "route"
 
   (it "returns a Tea for GET to /tea"
-    (->> (Request. "GET" "/tea")
+    (->> (build-request "GET" "/tea")
          (route)
          (should-be-a Tea)))
 
   (it "returns a Coffee for GET to /coffee"
-    (->> (Request. "GET" "/coffee")
+    (->> (build-request "GET" "/coffee")
          (route)
          (should-be-a Coffee)))
 
   (it "returns a Redirect for GET to /redirect"
-    (->> (Request. "GET" "/redirect")
+    (->> (build-request "GET" "/redirect")
          (route)
          (should-be-a Redirect)))
 
   (it "returns a MethodOptions for OPTIONS to /method_options"
-    (->> (Request. "OPTIONS" "/method_options")
+    (->> (build-request "OPTIONS" "/method_options")
          (route)
          (should-be-a MethodOptions)))
 
   (it "returns a MethodOptions2 for OPTIONS to /method_options2"
-    (->> (Request. "OPTIONS" "/method_options2")
+    (->> (build-request "OPTIONS" "/method_options2")
          (route)
          (should-be-a MethodOptions2)))
 
   (it "returns a DefaultGET for GET request"
-    (->> (Request. "GET" "/whatever")
+    (->> (build-request "GET" "/whatever")
          (route)
          (should-be-a DefaultGET)))
 
 
   (it "returns a Default for other requests"
-    (->> (Request. "POST" "/whatever")
+    (->> (build-request "POST" "/whatever")
          (route)
          (should-be-a Default)))
 )

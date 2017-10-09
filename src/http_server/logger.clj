@@ -8,5 +8,11 @@
 (timbre/merge-config! {:appenders {:spit (appenders/spit-appender {:fname log-file-name})}})
 
 (defn log [msg]
-  (info msg)
-  msg)
+  (info msg))
+
+(defn log-request [request]
+  (info (str (:method request) " "
+             (:uri request) " "
+             (:version request) " "
+             (:headers request)))
+  request)

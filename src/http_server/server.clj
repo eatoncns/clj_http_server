@@ -8,23 +8,21 @@
   (:import [java.net ServerSocket]
            [java.util.concurrent Executors]))
 
-(defn- read-request [socket]
-  (.readLine (io/reader socket)))
-
 (defn- send-response [msg, socket]
   (with-open [writer (io/output-stream socket)]
     (.write writer msg)))
 
 (defn- handle-request [directory-served, socket]
   (try
-    (-> socket
-        (read-request)
-        (logger/log)
-        (request/parse)
-        (router/route)
-        (route/process directory-served)
-        (response/build)
-        (send-response socket))
+    (with-open [reader (io/reader socket)]
+      (-> reader
+          (request/parse)
+          (logger/log-request)
+          (router/route)
+          (route/process directory-served)
+          (response/build)
+          (send-response socket))
+      )
     (finally (.close socket))))
 
 (defn- serve [port, directory-served]
@@ -37,5 +35,5 @@
           (recur))))))
 
 (defn start [port, directory-served]
-  (println (str "Serving " directory-served " at port " port))
+  (logger/log (str "Serving " directory-served " at port " port))
   (serve port directory-served))
