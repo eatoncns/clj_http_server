@@ -17,7 +17,7 @@
     (with-open [reader (io/reader socket)]
       (-> reader
           (request/parse)
-          ;(logger/log)
+          (logger/log-request)
           (router/route)
           (route/process directory-served)
           (response/build)
@@ -35,5 +35,5 @@
           (recur))))))
 
 (defn start [port, directory-served]
-  (println (str "Serving " directory-served " at port " port))
+  (logger/log (str "Serving " directory-served " at port " port))
   (serve port directory-served))
