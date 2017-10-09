@@ -3,7 +3,6 @@
 
 (defrecord Request [method uri])
 
-(defn parse [input]
-  (let [[request-line _] (str/split input #"\r\n" 2)
-        [method uri version] (str/split request-line #" " 3)]
-    (map->Request {:method method :uri uri})))
+(defn parse [reader]
+  (let [[method uri version] (str/split (.readLine reader) #" " 3)]
+    (map->Request {:method method :uri uri :version version})))
