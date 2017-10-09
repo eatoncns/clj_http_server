@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [http-server.request :as request]
             [http-server.logger :as logger]
+            [http-server.auth :as auth]
             [http-server.router :as router]
             [http-server.routes.route :as route]
             [http-server.response :as response])
@@ -12,28 +13,28 @@
   (with-open [writer (io/output-stream socket)]
     (.write writer msg)))
 
-(defn- handle-request [directory-served, socket]
+(defn- handle-request [directory-served, auth-config, socket]
   (try
     (with-open [reader (io/reader socket)]
       (-> reader
           (request/parse)
           (logger/log-request)
+          (auth/authorise auth-config)
           (router/route)
           (route/process directory-served)
           (response/build)
-          (send-response socket))
-      )
+          (send-response socket)))
     (finally (.close socket))))
 
-(defn- serve [port, directory-served]
+(defn- serve [port, directory-served, auth-config]
   (let [thread-pool (Executors/newFixedThreadPool 20)
-        request-handler (partial handle-request directory-served)]
+        request-handler (partial handle-request directory-served auth-config)]
     (with-open [server-sock (ServerSocket. port)]
       (loop []
         (let [sock (.accept server-sock)]
           (.execute thread-pool #(request-handler sock))
           (recur))))))
 
-(defn start [port, directory-served]
+(defn start [port, directory-served auth-config]
   (logger/log (str "Serving " directory-served " at port " port))
-  (serve port directory-served))
+  (serve port directory-served auth-config))

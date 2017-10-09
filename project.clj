@@ -7,7 +7,8 @@
   :aot [http-server.core]
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/tools.cli "0.3.5"]
-                 [com.taoensso/timbre "4.10.0"]]
+                 [com.taoensso/timbre "4.10.0"]
+                 [org.clojure/data.codec "0.1.0"]]
   :profiles {:dev {:dependencies [[speclj "3.3.2"]]}}
   :plugins [[speclj "3.3.2"]]
   :test-paths ["spec"])

@@ -19,5 +19,6 @@
 
 (defn -main
   [& args]
-  (let [options (get-opts args)]
-    (server/start (:port options) (:directory options))))
+  (let [options (get-opts args)
+        auth-config {"/logs" {:username "admin" :password "hunter2"}}]
+    (server/start (:port options) (:directory options) auth-config)))
