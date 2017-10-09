@@ -9,6 +9,7 @@
             [http-server.routes.redirect]
             [http-server.routes.method-options]
             [http-server.routes.method-options2]
+            [http-server.routes.logs]
             [http-server.routes.not-authorised]
             [http-server.request :refer [map->Request]])
   (:import [http_server.routes.default_get DefaultGET]
@@ -18,6 +19,7 @@
            [http_server.routes.redirect Redirect]
            [http_server.routes.method_options MethodOptions]
            [http_server.routes.method_options2 MethodOptions2]
+           [http_server.routes.logs Logs]
            [http_server.routes.not_authorised NotAuthorised]
            [http_server.request Request]))
 
@@ -50,6 +52,11 @@
     (->> (build-request "OPTIONS" "/method_options2")
          (route)
          (should-be-a MethodOptions2)))
+
+  (it "returns a Logs for GET to /logs"
+    (->> (build-request "GET" "/logs")
+         (route)
+         (should-be-a Logs)))
 
   (it "returns NotAuthorised for unauthorised route"
     (->> (build-request "GET" "/whatver")
