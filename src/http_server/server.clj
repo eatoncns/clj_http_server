@@ -23,8 +23,7 @@
           (router/route)
           (route/process directory-served)
           (response/build)
-          (send-response socket))
-      )
+          (send-response socket)))
     (finally (.close socket))))
 
 (defn- serve [port, directory-served, auth-config]

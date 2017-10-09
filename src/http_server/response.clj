@@ -6,7 +6,9 @@
 (defrecord Response [status headers body])
 
 (def reasons { 200 "OK"
-               404 "Not Found"})
+               401 "Unauthorized"
+               404 "Not Found"
+               418 "I'm a teapot"})
 
 (def content-types {:html "text/html"})
 

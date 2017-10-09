@@ -6,9 +6,11 @@
             [http-server.routes.redirect :refer [->Redirect]]
             [http-server.routes.method-options :refer [->MethodOptions]]
             [http-server.routes.method-options2 :refer [->MethodOptions2]]
+            [http-server.routes.not-authorised :refer [->NotAuthorised]]
             [http-server.routes.route :as route]))
 
-(def route-constructors [->MethodOptions
+(def route-constructors [->NotAuthorised
+                         ->MethodOptions
                          ->MethodOptions2
                          ->Redirect
                          ->Tea
