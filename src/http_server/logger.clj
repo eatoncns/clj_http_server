@@ -11,5 +11,8 @@
   (info msg))
 
 (defn log-request [request]
-  (info (str (:method request) " " (:uri request) " " (:version request)))
+  (info (str (:method request) " "
+             (:uri request) " "
+             (:version request) " "
+             (:headers request)))
   request)
