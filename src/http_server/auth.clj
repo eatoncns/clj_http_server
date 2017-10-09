@@ -1,5 +1,6 @@
 (ns http-server.auth
-  (:require [clojure.data.codec.base64 :as b64]
+  (:require [http-server.utils.base64 :as b64]
+            [http-server.utils.functional :as func]
             [clojure.string :as str]))
 
 (defn- set-authorised [request auth-result]
@@ -12,17 +13,11 @@
     (set-authorised request true)
     (set-authorised request false)))
 
-(defn- flip [f]
-  (fn [& xs]
-    (apply f (reverse xs))))
-
 (defn- decode [encoded-credentials]
   (-> encoded-credentials
-      (.getBytes)
-      (b64/decode)
-      (String.)
+      (b64/decode-string)
       (str/split #":" 2)
-      ((flip zipmap) [:username :password])))
+      ((func/flip zipmap) [:username :password])))
 
 (defn- check-credentials [request uri-config]
   (let [header-string (get-in request [:headers auth-key])

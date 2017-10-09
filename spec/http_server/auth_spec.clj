@@ -2,16 +2,10 @@
   (:require [speclj.core :refer :all]
             [http-server.auth :refer :all]
             [http-server.request :refer [map->Request]]
-            [clojure.data.codec.base64 :as b64]))
-
-(defn encode [in]
-  (-> in
-      (.getBytes)
-      (b64/encode)
-      (String.)))
+            [http-server.utils.base64 :as b64]))
 
 (def auth-config {"/logs" {:username "admin" :password "hunter2"}})
-(def matching-credentials (encode "admin:hunter2"))
+(def matching-credentials (b64/encode-string "admin:hunter2"))
 
 (describe authorise
 
@@ -49,7 +43,7 @@
     (-> (map->Request{:method "GET"
                       :uri "/logs"
                       :version "HTTP/1.1"
-                      :headers {"Authorization" (str "Basic " (encode "admin:hunter3"))}})
+                      :headers {"Authorization" (str "Basic " (b64/encode-string "admin:hunter3"))}})
         (authorise auth-config)
         (get :authorised)
         (should= false)))
