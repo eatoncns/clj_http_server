@@ -1,5 +1,6 @@
 (ns http-server.utils.file-info
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [clojure.string :as string])
   (:import [java.io File FileInputStream]))
 
 (defprotocol FileInfo
@@ -27,3 +28,9 @@
       (.close input-stream)
       array))
 )
+
+(defn extension [path]
+  (let [parts (string/split path #"\.")]
+    (if (= (count parts) 1)
+      "txt"
+      (last parts))))

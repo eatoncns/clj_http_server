@@ -10,7 +10,11 @@
                404 "Not Found"
                418 "I'm a teapot"})
 
-(def content-types {:html "text/html"})
+(def content-types {"html" "text/html"
+                    "txt" "text/plain"
+                    "png" "image/png"
+                    "jpeg" "image/jpeg"
+                    "gif" "image/gif"})
 
 (defn content-type [shorthand]
   {"Content-Type" (get content-types shorthand)})
