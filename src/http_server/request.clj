@@ -1,34 +1,31 @@
 (ns http-server.request
-  (:require [clojure.string :as str]))
+  (:require [http-server.utils.functional :as func]
+            [clojure.string :as string]))
 
 (defrecord Request [method uri version headers params])
 
-(defn- split-map [coll line divider]
-  (let [[k v] (str/split line divider 2)]
-    (assoc coll (str/trim k) (str/trim v))))
-
 (defn- parse-request-line [reader]
-  (str/split (.readLine reader) #" " 3))
+  (string/split (.readLine reader) #" " 3))
 
 (defn- header-lines [reader]
   (take-while (complement empty?) (repeatedly #(.readLine reader))))
 
 (defn- parse-header [headers header-line]
-  (split-map headers header-line #":"))
+  (func/split-map headers header-line #":"))
 
 (defn- parse-headers [reader]
   (reduce parse-header {} (header-lines reader)))
 
 (defn- parse-param [params param-string]
-  (split-map params param-string #"="))
+  (func/split-map params param-string #"="))
 
 (defn- parse-params [params-string]
   (if (nil? params-string)
     nil
-    (reduce parse-param {} (str/split params-string #"&"))))
+    (reduce parse-param {} (string/split params-string #"&"))))
 
 (defn- parse-full-uri [full-uri]
-  (let [[uri params-string] (str/split full-uri #"\?" 2)
+  (let [[uri params-string] (string/split full-uri #"\?" 2)
         params (parse-params params-string)]
     [uri params]))
 
