@@ -37,6 +37,12 @@
          (:params)
          (should== {"type" "chocolate", "blah" "stuff"})))
 
+  (it "parses encoded params"
+    (->> "GET /foo?var=Blah%20%3C%2C HTTP/1.1\r\n\r\n"
+         (run-parse)
+         (:params)
+         (should== {"var" "Blah <,"})))
+
   (it "parses version"
     (->> "GET /foo HTTP/1.1\r\n\r\n"
          (run-parse)
