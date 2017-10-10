@@ -10,11 +10,11 @@
   (cond
     (fi/is-directory? file-info path)
       (map->Response {:status 200
-                      :headers (content-type :html)
+                      :headers (content-type "html")
                       :body (html/list-of-links (fi/list-files file-info path))})
     (fi/file-exists? file-info path)
       (map->Response {:status 200
-                      :headers {}
+                      :headers (content-type (fi/extension path))
                       :body (fi/file-data file-info path)})
     :else
       (map->Response {:status 404
