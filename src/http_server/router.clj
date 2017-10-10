@@ -3,6 +3,8 @@
             [http-server.routes.default :refer [->Default]]
             [http-server.routes.coffee :refer [->Coffee]]
             [http-server.routes.tea :refer [->Tea]]
+            [http-server.routes.cookie :refer [->Cookie]]
+            [http-server.routes.eat-cookie :refer [->EatCookie]]
             [http-server.routes.redirect :refer [->Redirect]]
             [http-server.routes.method-options :refer [->MethodOptions]]
             [http-server.routes.method-options2 :refer [->MethodOptions2]]
@@ -16,6 +18,8 @@
                          ->Redirect
                          ->Tea
                          ->Coffee
+                         ->Cookie
+                         ->EatCookie
                          ->Logs
                          ->DefaultGET
                          ->Default])

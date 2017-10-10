@@ -6,6 +6,8 @@
             [http-server.routes.default]
             [http-server.routes.coffee]
             [http-server.routes.tea]
+            [http-server.routes.cookie]
+            [http-server.routes.eat-cookie]
             [http-server.routes.redirect]
             [http-server.routes.method-options]
             [http-server.routes.method-options2]
@@ -16,6 +18,8 @@
            [http_server.routes.default Default]
            [http_server.routes.coffee Coffee]
            [http_server.routes.tea Tea]
+           [http_server.routes.cookie Cookie]
+           [http_server.routes.eat_cookie EatCookie]
            [http_server.routes.redirect Redirect]
            [http_server.routes.method_options MethodOptions]
            [http_server.routes.method_options2 MethodOptions2]
@@ -37,6 +41,16 @@
     (->> (build-request "GET" "/coffee")
          (route)
          (should-be-a Coffee)))
+
+  (it "returns a Cookie for GET to /cookie"
+    (->> (build-request "GET" "/cookie")
+         (route)
+         (should-be-a Cookie)))
+
+  (it "returns a EatCookie for GET to /eat_cookie"
+    (->> (build-request "GET" "/eat_cookie")
+         (route)
+         (should-be-a EatCookie)))
 
   (it "returns a Redirect for GET to /redirect"
     (->> (build-request "GET" "/redirect")
