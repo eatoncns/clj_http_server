@@ -1,6 +1,7 @@
 (ns http-server.request
   (:require [http-server.utils.functional :as func]
-            [clojure.string :as string]))
+            [clojure.string :as string])
+  (:import [java.net URLDecoder]))
 
 (defrecord Request [method uri version headers params])
 
@@ -16,8 +17,13 @@
 (defn- parse-headers [reader]
   (reduce parse-header {} (header-lines reader)))
 
+(defn trim-and-decode [s]
+  (-> s
+      (string/trim)
+      (java.net.URLDecoder/decode "UTF-8")))
+
 (defn- parse-param [params param-string]
-  (func/split-map params param-string #"="))
+  (func/split-map params param-string #"=" trim-and-decode))
 
 (defn- parse-params [params-string]
   (if (nil? params-string)
