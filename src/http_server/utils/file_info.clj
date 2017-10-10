@@ -7,7 +7,16 @@
   (is-directory? [this path])
   (list-files [this path])
   (file-exists? [this path])
-  (file-data [this path]))
+  (file-data [this path])
+  (partial-file-data [this path start end]))
+
+(defn- read-file [file start length]
+  (let [array (byte-array length)
+        input-stream (java.io.FileInputStream. file)]
+      (.skip input-stream start)
+      (.read input-stream array)
+      (.close input-stream)
+      array))
 
 (defrecord FileInfoAtRoot [root]
   FileInfo
@@ -27,6 +36,15 @@
       (.read input-stream array)
       (.close input-stream)
       array))
+
+  ;(partial-file-data [this path start end]
+  ;  (let [file (java.io.File. (str root path))
+  ;        array (byte-array (- end start))
+  ;        input-stream (java.io.FileInputStream .file)]
+  ;    (.skip input-stream start)
+  ;    (.read input-stream array)
+  ;    (.close input-stream)
+  ;    array))
 )
 
 (defn extension [path]
