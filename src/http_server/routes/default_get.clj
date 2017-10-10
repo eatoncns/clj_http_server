@@ -6,20 +6,21 @@
   (:import [http_server.response Response]
            [http_server.utils.file_info FileInfoAtRoot]))
 
-(defn process-get [path, file-info]
-  (cond
-    (fi/is-directory? file-info path)
-      (map->Response {:status 200
-                      :headers (content-type "html")
-                      :body (html/list-of-links (fi/list-files file-info path))})
-    (fi/file-exists? file-info path)
-      (map->Response {:status 200
-                      :headers (content-type (fi/extension path))
-                      :body (fi/file-data file-info path)})
-    :else
-      (map->Response {:status 404
-                      :headers {}
-                      :body nil})))
+(defn process-get [request, file-info]
+  (let [path (get request :uri)]
+    (cond
+      (fi/is-directory? file-info path)
+        (map->Response {:status 200
+                        :headers (content-type "html")
+                        :body (html/list-of-links (fi/list-files file-info path))})
+      (fi/file-exists? file-info path)
+        (map->Response {:status 200
+                        :headers (content-type (fi/extension path))
+                        :body (fi/file-data file-info path)})
+      :else
+        (map->Response {:status 404
+                        :headers {}
+                        :body nil}))))
 
 (defrecord DefaultGET [request]
   route/Route
@@ -27,4 +28,4 @@
     (= (get-in this [:request :method]) "GET"))
 
   (process [this directory-served]
-    (process-get (get-in this [:request :uri]) (FileInfoAtRoot. directory-served))))
+    (process-get (get this :request) (FileInfoAtRoot. directory-served))))

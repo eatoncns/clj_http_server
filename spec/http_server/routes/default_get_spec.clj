@@ -2,7 +2,8 @@
   (:require [speclj.core :refer :all]
             [http-server.routes.default-get :refer :all]
             [http-server.utils.file-info :as fi]
-            [http-server.utils.functional :as func]))
+            [http-server.utils.functional :as func]
+            [http-server.request :refer [map->Request]]))
 
 (defrecord FakeFileInfo []
   fi/FileInfo
@@ -11,39 +12,45 @@
   (file-exists? [this path] (= path "/foo.png"))
   (file-data [this path] "blah"))
 
-(defn run-get [path]
+(defn run-get [request]
   (->> (FakeFileInfo.)
-       (process-get path)))
+       (process-get request)))
 
 (describe "process-get"
 
   (it "returns 200 when path is a valid directory"
-    (->> (run-get "/dir")
+    (->> (map->Request {:uri "/dir"})
+         (run-get)
          (:status)
          (should= 200)))
 
   (it "returns file listing page as body for valid directory"
-    (->> (run-get "/dir")
+    (->> (map->Request {:uri "/dir"})
+         (run-get)
          (:body)
          (should-contain "hello.txt")))
 
   (it "returns 404 when path does not exist"
-    (->> (run-get "/foobar")
+    (->> (map->Request {:uri "/foobar"})
+         (run-get)
          (:status)
          (should= 404)))
 
   (it "returns 200 when path is a file that exists"
-    (->> (run-get "/foo.png")
+    (->> (map->Request {:uri "/foo.png"})
+         (run-get)
          (:status)
          (should= 200)))
 
   (it "returns file contents as body when path is a file that exists"
-    (->> (run-get "/foo.png")
+    (->> (map->Request {:uri "/foo.png"})
+         (run-get)
          (:body)
          (should= "blah")))
 
   (it "returns content-type header based on file type"
-    (->> (run-get "/foo.png")
+    (->> (map->Request {:uri "/foo.png"})
+         (run-get)
          ((func/flip get-in) [:headers "Content-Type"])
          (should= "image/png")))
 )
