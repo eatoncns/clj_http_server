@@ -22,6 +22,7 @@
           (auth/authorise auth-config)
           (router/route)
           (route/process directory-served)
+          (logger/log-response)
           (response/build)
           (send-response socket)))
     (finally (.close socket))))

@@ -9,6 +9,7 @@
             [http-server.routes.cookie]
             [http-server.routes.eat-cookie]
             [http-server.routes.parameters]
+            [http-server.routes.form]
             [http-server.routes.redirect]
             [http-server.routes.method-options]
             [http-server.routes.method-options2]
@@ -22,6 +23,7 @@
            [http_server.routes.cookie Cookie]
            [http_server.routes.eat_cookie EatCookie]
            [http_server.routes.parameters Parameters]
+           [http_server.routes.form Form]
            [http_server.routes.redirect Redirect]
            [http_server.routes.method_options MethodOptions]
            [http_server.routes.method_options2 MethodOptions2]
@@ -58,6 +60,11 @@
     (->> (build-request "GET" "/parameters")
          (route)
          (should-be-a Parameters)))
+
+  (it "returns a Form for GET to /form"
+    (->> (build-request "GET" "/form")
+         (route)
+         (should-be-a Form)))
 
   (it "returns a Redirect for GET to /redirect"
     (->> (build-request "GET" "/redirect")

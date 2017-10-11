@@ -14,5 +14,13 @@
   (info (str (:method request) " "
              (:uri request) " "
              (:version request) " "
-             (:headers request)))
+             (:params request) " "
+             (:headers request) " "
+             (:body request)))
   request)
+
+(defn log-response [response]
+  (info (str (:status response) " "
+             (:headers response) " "
+             (:body response)))
+  response)

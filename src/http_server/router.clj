@@ -6,6 +6,7 @@
             [http-server.routes.cookie :refer [->Cookie]]
             [http-server.routes.eat-cookie :refer [->EatCookie]]
             [http-server.routes.parameters :refer [->Parameters]]
+            [http-server.routes.form :refer [->Form]]
             [http-server.routes.redirect :refer [->Redirect]]
             [http-server.routes.method-options :refer [->MethodOptions]]
             [http-server.routes.method-options2 :refer [->MethodOptions2]]
@@ -22,6 +23,7 @@
                          ->Cookie
                          ->EatCookie
                          ->Parameters
+                         ->Form
                          ->Logs
                          ->DefaultGET
                          ->Default])
