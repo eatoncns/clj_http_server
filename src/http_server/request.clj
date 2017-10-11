@@ -17,7 +17,7 @@
 (defn- parse-headers [reader]
   (reduce parse-header {} (header-lines reader)))
 
-(defn trim-and-decode [s]
+(defn- trim-and-decode [s]
   (-> s
       (string/trim)
       (java.net.URLDecoder/decode "UTF-8")))
