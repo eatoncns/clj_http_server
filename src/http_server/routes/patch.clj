@@ -2,14 +2,10 @@
   (:require [http-server.routes.route :as route]
             [http-server.response :refer [map->Response]]
             [http-server.utils.file-info :as fi]
-            [http-server.utils.sha1 :as sha1])
+            [http-server.utils.sha1 :as sha1]
+            [http-server.constants.errors :as err])
   (:import [http_server.response Response]
            [http_server.utils.file_info FileInfoAtRoot]))
-
-(defn error [code] (map->Response {:status code :headers {} :body nil}))
-(def unprocessable-request (error 422))
-(def precondition-failed (error 412))
-(def file-not-found (error 404))
 
 (defn- do-patch [request file-info]
   (let [body (:body request)
@@ -24,7 +20,7 @@
         current-hash (sha1/encode (fi/file-data file-info uri))]
     (if (= request-hash current-hash)
       (do-patch request file-info)
-      precondition-failed)))
+      err/precondition-failed)))
 
 (defn- has-if-match? [request]
   (contains? (:headers request) "If-Match"))
@@ -32,13 +28,13 @@
 (defn- check-if-match [request file-info]
   (if (has-if-match? request)
     (process-if-match request file-info)
-    unprocessable-request))
+    err/unprocessable-request))
 
 (defn process-patch [request file-info]
   (let [uri (:uri request)]
     (if (fi/file-exists? file-info uri)
       (check-if-match request file-info)
-      file-not-found)))
+      err/file-not-found)))
 
 (defrecord Patch [request]
   route/Route
