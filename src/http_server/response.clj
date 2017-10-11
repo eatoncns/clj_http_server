@@ -9,7 +9,9 @@
                206 "Partial Content"
                401 "Unauthorized"
                404 "Not Found"
-               418 "I'm a teapot"})
+               412 "Precondition Failed"
+               418 "I'm a teapot"
+               422 "Unprocessable Entity"})
 
 (def content-types {"html" "text/html"
                     "txt" "text/plain"
