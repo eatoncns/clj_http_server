@@ -1,6 +1,11 @@
 (ns http-server.utils.functional
   (:require [clojure.string :as string]))
 
+(def not-nil? (complement nil?))
+
+(defn in? [v coll]
+  (not-nil? (some #(= v %) coll)))
+
 (defn flip [f]
   (fn [& xs]
     (apply f (reverse xs))))
