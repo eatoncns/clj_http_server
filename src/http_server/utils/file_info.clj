@@ -9,7 +9,8 @@
   (file-exists? [this path])
   (file-length [this path])
   (file-data [this path])
-  (partial-file-data [this path start length]))
+  (partial-file-data [this path start length])
+  (patch-file [this path data]))
 
 (defn- read-file [file start length]
   (let [array (byte-array length)
@@ -41,6 +42,9 @@
   (partial-file-data [this path start length]
     (let [file (java.io.File. (str root path))]
       (read-file file start length)))
+
+  (patch-file [this path data]
+    (spit (str root path) data))
 )
 
 (defn extension [path]
