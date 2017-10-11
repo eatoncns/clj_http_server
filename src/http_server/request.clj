@@ -3,7 +3,7 @@
             [clojure.string :as string])
   (:import [java.net URLDecoder]))
 
-(defrecord Request [method uri version headers params])
+(defrecord Request [method uri version headers params body])
 
 (defn- parse-request-line [reader]
   (string/split (.readLine reader) #" " 3))
@@ -35,12 +35,27 @@
         params (parse-params params-string)]
     [uri params]))
 
+(defn- read-body [reader length]
+  (let [ch-array (char-array length)]
+    (.read reader ch-array 0 length)
+    (String. ch-array)))
+
+(defn- content-length [headers]
+  (Integer/parseInt (get headers "Content-Length")))
+
+(defn- parse-body [reader headers]
+  (if (contains? headers "Content-Length")
+    (read-body reader (content-length headers))
+    nil))
+
 (defn parse [reader]
   (let [[method full-uri version] (parse-request-line reader)
         [uri params] (parse-full-uri full-uri)
-        headers (parse-headers reader)]
+        headers (parse-headers reader)
+        body (parse-body reader headers)]
     (map->Request {:method method
                    :uri uri
                    :version version
                    :headers headers
-                   :params params})))
+                   :params params
+                   :body body})))

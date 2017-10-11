@@ -54,4 +54,10 @@
          (run-parse)
          (:headers)
          (should== {"Connection" "Keep-Alive" "Host" "localhost"})))
+
+  (it "parses body"
+    (->> "GET /foo HTTP/1.1\r\nContent-Length: 11\r\n\r\ndata=fatcat"
+         (run-parse)
+         (:body)
+         (should= "data=fatcat")))
 )
