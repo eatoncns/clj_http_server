@@ -68,21 +68,3 @@
          ((func/flip get-in) [:headers "Content-Type"])
          (should= "image/png")))
 )
-
-(describe "calculate-range"
-
-  (it "calculates start and length from a full range"
-    (->> "bytes=0-4"
-         (calculate-range (FakeFileInfo.) "/whatever")
-         (should= [0 5])))
-
-  (it "calculates start and length from an end range"
-    (->> "bytes=-4"
-         (calculate-range (FakeFileInfo.) "/whatever")
-         (should= [96 4])))
-
-  (it "calculates start and length from a start range"
-    (->> "bytes=4-"
-         (calculate-range (FakeFileInfo.) "/whatever")
-         (should= [4 96])))
-)
