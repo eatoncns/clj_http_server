@@ -6,6 +6,7 @@
 (defrecord Response [status headers body])
 
 (def reasons { 200 "OK"
+               206 "Partial Content"
                401 "Unauthorized"
                404 "Not Found"
                418 "I'm a teapot"})
