@@ -5,8 +5,8 @@
             [http-server.spec-helper :refer [rshould=]]))
 
 (describe "is-applicable"
-  (it "returns true for GET/POST/DELETE to /form"
-    (doseq [method ["GET" "POST" "DELETE"]]
+  (it "returns true for GET/POST/PUT/DELETE to /form"
+    (doseq [method ["GET" "POST" "PUT" "DELETE"]]
       (-> (map->Form{:request {:method method :uri "/form"}})
           (route/is-applicable)
           (rshould= true))))
@@ -18,7 +18,7 @@
           (rshould= false))))
 
   (it "returns false for other methods"
-    (doseq [method ["HEAD" "PUT" "OPTIONS"]]
+    (doseq [method ["HEAD" "OPTIONS"]]
       (-> (map->Form{:request {:method method :uri "/form"}})
           (route/is-applicable)
           (rshould= false))))
@@ -37,16 +37,18 @@
            (:body)
            (should= "data=fatcat"))))
 
-  (it "returns 200 status for POST"
-    (let [data (atom "data=fatcat")]
-      (->> (process-form {:method "POST" :uri "/form" :body "data=blah"} data)
-           (:status)
-           (should= 200))))
+  (it "returns 200 status for PUT/POST"
+    (doseq [method ["PUT" "POST"]]
+      (let [data (atom "data=fatcat")]
+        (->> (process-form {:method method :uri "/form" :body "data=blah"} data)
+             (:status)
+             (should= 200)))))
 
-  (it "updates data with POST body"
-    (let [data (atom "data=fatcat")]
-      (process-form {:method "POST" :uri "/form" :body "data=blah"} data)
-      (should= "data=blah" @data)))
+  (it "updates data with PUT/POST body"
+    (doseq [method ["PUT" "POST"]]
+      (let [data (atom "data=fatcat")]
+        (process-form {:method method :uri "/form" :body "data=blah"} data)
+        (should= "data=blah" @data))))
 
   (it "returns 200 status for DELETE"
     (let [data (atom "data=fatcat")]

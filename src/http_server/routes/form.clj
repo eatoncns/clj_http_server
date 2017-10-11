@@ -9,7 +9,7 @@
 (defn- handle-get [current-data]
   (map->Response {:status 200 :headers {} :body @current-data}))
 
-(defn- handle-post [request current-data]
+(defn- handle-update [request current-data]
   (reset! current-data (get request :body))
   (map->Response {:status 200 :headers {} :body nil}))
 
@@ -20,14 +20,14 @@
 (defn process-form [request current-data]
   (case (get request :method)
     "GET" (handle-get current-data)
-    "POST" (handle-post request current-data)
+    ("POST" "PUT") (handle-update request current-data)
     "DELETE" (handle-delete current-data)))
 
 (defrecord Form [request]
   route/Route
   (is-applicable [this]
     (and (= (get-in this [:request :uri]) "/form")
-         (in? (get-in this [:request :method]) ["GET" "POST" "DELETE"])))
+         (in? (get-in this [:request :method]) ["GET" "POST" "PUT" "DELETE"])))
 
   (process [this directory-served]
     (process-form (get this :request) data))
