@@ -7,8 +7,9 @@
   (is-directory? [this path])
   (list-files [this path])
   (file-exists? [this path])
+  (file-length [this path])
   (file-data [this path])
-  (partial-file-data [this path start end]))
+  (partial-file-data [this path start length]))
 
 (defn- read-file [file start length]
   (let [array (byte-array length)
@@ -29,22 +30,17 @@
   (file-exists? [this path]
     (.isFile (io/as-file (str root path))))
 
+  (file-length [this path]
+    (.length (io/as-file (str root path))))
+
   (file-data [this path]
     (let [file (java.io.File. (str root path))
-          array (byte-array (.length file))
-          input-stream (java.io.FileInputStream. file)]
-      (.read input-stream array)
-      (.close input-stream)
-      array))
+          length (.length file)]
+      (read-file file 0 length)))
 
-  ;(partial-file-data [this path start end]
-  ;  (let [file (java.io.File. (str root path))
-  ;        array (byte-array (- end start))
-  ;        input-stream (java.io.FileInputStream .file)]
-  ;    (.skip input-stream start)
-  ;    (.read input-stream array)
-  ;    (.close input-stream)
-  ;    array))
+  (partial-file-data [this path start length]
+    (let [file (java.io.File. (str root path))]
+      (read-file file start length)))
 )
 
 (defn extension [path]

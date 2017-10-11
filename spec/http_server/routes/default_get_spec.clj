@@ -10,7 +10,9 @@
   (is-directory? [this path] (= path "/dir"))
   (list-files [this path] ["hello.txt" "image.png" "file1"])
   (file-exists? [this path] (= path "/foo.png"))
-  (file-data [this path] "blah"))
+  (file-length [this path] 100)
+  (file-data [this path] "blah")
+  (partial-file-data [this path start length] (str path " " start " " length)))
 
 (defn run-get [request]
   (->> (FakeFileInfo.)
@@ -48,9 +50,39 @@
          (:body)
          (should= "blah")))
 
+  (it "returns 206 for partial file content"
+    (->> (map->Request {:uri "/foo.png" :headers {"Range" "bytes=0-4"}})
+         (run-get)
+         (:status)
+         (should= 206)))
+
+  (it "returns partial file contents as body when header requests it"
+    (->> (map->Request {:uri "/foo.png" :headers {"Range" "bytes=0-4"}})
+         (run-get)
+         (:body)
+         (should= "/foo.png 0 5")))
+
   (it "returns content-type header based on file type"
     (->> (map->Request {:uri "/foo.png"})
          (run-get)
          ((func/flip get-in) [:headers "Content-Type"])
          (should= "image/png")))
+)
+
+(describe "calculate-range"
+
+  (it "calculates start and length from a full range"
+    (->> "bytes=0-4"
+         (calculate-range (FakeFileInfo.) "/whatever")
+         (should= [0 5])))
+
+  (it "calculates start and length from an end range"
+    (->> "bytes=-4"
+         (calculate-range (FakeFileInfo.) "/whatever")
+         (should= [96 4])))
+
+  (it "calculates start and length from a start range"
+    (->> "bytes=4-"
+         (calculate-range (FakeFileInfo.) "/whatever")
+         (should= [4 96])))
 )
