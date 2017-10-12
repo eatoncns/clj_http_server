@@ -2,8 +2,7 @@
   (:require [speclj.core :refer :all]
             [http-server.routes.not-authorised :refer :all]
             [http-server.routes.route :as route]
-            [http-server.spec-helper :refer :all]
-            [http-server.constants.methods :refer :all]))
+            [http-server.spec-helper :refer :all]))
 
 (defn not-authorised-request [authorised]
   (map->NotAuthorised {:request {:authorised authorised}}))
