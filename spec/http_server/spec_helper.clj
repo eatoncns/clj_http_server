@@ -18,3 +18,9 @@
       (route/process "directory served")
       (get field)
       (rshould= expected)))
+
+(defn response-should-have-header [route-instance header expected]
+  (-> route-instance
+      (route/process "directory served")
+      (get-in [:headers header])
+      (rshould= expected)))
