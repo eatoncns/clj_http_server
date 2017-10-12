@@ -1,6 +1,6 @@
 (ns http-server.router-spec
   (:require [speclj.core :refer :all]
-            [http-server.spec-helper :refer [rshould-be-a]]
+            [http-server.spec-helper :refer [rshould= rshould-be-a]]
             [http-server.router :refer :all]
             [http-server.constants.methods :refer :all]
             [http-server.routes.default-get]
@@ -95,5 +95,5 @@
   (it "returns list of allowed methods for a uri"
     (-> (build-request "PATCH" "/form")
         (allowed-methods "directory-served")
-        (should= ["DELETE" "GET" "PATCH" "POST" "PUT"])))
+        (rshould= ["DELETE" "GET" "HEAD" "PATCH" "POST" "PUT"])))
 )
