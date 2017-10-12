@@ -3,7 +3,6 @@
             [http-server.utils.functional :as func]
             [http-server.router :refer :all]
             [http-server.routes.default-get]
-            [http-server.routes.default]
             [http-server.routes.coffee]
             [http-server.routes.tea]
             [http-server.routes.cookie]
@@ -18,7 +17,6 @@
             [http-server.routes.not-authorised]
             [http-server.request :refer [map->Request]])
   (:import [http_server.routes.default_get DefaultGET]
-           [http_server.routes.default Default]
            [http_server.routes.coffee Coffee]
            [http_server.routes.tea Tea]
            [http_server.routes.cookie Cookie]
@@ -104,10 +102,4 @@
          (route)
          (should-be-a DefaultGET)))
 
-
-  (it "returns a Default for other requests"
-    (->> (build-request "POST" "/whatever")
-         (route)
-         (should-be-a Default)))
 )
-

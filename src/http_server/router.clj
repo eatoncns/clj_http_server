@@ -1,6 +1,5 @@
 (ns http-server.router
   (:require [http-server.routes.default-get :refer [->DefaultGET]]
-            [http-server.routes.default :refer [->Default]]
             [http-server.routes.coffee :refer [->Coffee]]
             [http-server.routes.tea :refer [->Tea]]
             [http-server.routes.cookie :refer [->Cookie]]
@@ -27,8 +26,7 @@
                          ->Form
                          ->Patch
                          ->Logs
-                         ->DefaultGET
-                         ->Default])
+                         ->DefaultGET])
 
 (defn route [request]
   (let [routes (map #(%1 request) route-constructors)]
