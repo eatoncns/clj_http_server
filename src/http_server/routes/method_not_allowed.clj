@@ -22,7 +22,7 @@
 
 (defrecord MethodNotAllowed [request allowed]
   route/Route
-  (is-applicable [this]
+  (is-applicable? [this directory-served]
     true)
 
   (process [this directory-served]

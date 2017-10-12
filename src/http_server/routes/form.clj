@@ -25,7 +25,7 @@
 
 (defrecord Form [request]
   route/Route
-  (is-applicable [this]
+  (is-applicable? [this directory-served]
     (and (= (get-in this [:request :uri]) "/form")
          (in? (get-in this [:request :method]) ["GET" "POST" "PUT" "DELETE"])))
 

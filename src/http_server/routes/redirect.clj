@@ -5,7 +5,7 @@
 
 (defrecord Redirect [request]
   route/Route
-  (is-applicable [this]
+  (is-applicable? [this directory-served]
     (and (= (get-in this [:request :uri]) "/redirect")
          (= (get-in this [:request :method]) "GET")))
 

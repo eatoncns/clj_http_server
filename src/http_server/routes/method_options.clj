@@ -5,7 +5,7 @@
 
 (defrecord MethodOptions [request]
   route/Route
-  (is-applicable [this]
+  (is-applicable? [this directory-served]
     (= (get-in this [:request :uri]) "/method_options"))
 
   (process [this directory-served]

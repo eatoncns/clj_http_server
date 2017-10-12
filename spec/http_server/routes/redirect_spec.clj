@@ -1,42 +1,36 @@
 (ns http-server.routes.redirect-spec
   (:require [speclj.core :refer :all]
             [http-server.routes.redirect :refer :all]
-            [http-server.routes.route :as route]))
+            [http-server.routes.route :as route]
+            [http-server.spec-helper :refer :all]
+            [http-server.constants.methods :refer :all]
+            [clojure.set :as s]))
 
-(describe "is-applicable"
+(defn redirect-request [method uri]
+  (map->Redirect {:request {:method method :uri uri}}))
+
+(describe "is-applicable?"
   (it "returns true for GET to /redirect"
-    (-> (map->Redirect{:request {:method "GET" :uri "/redirect"}})
-        (route/is-applicable)
-        (should= true)))
+    (applicable-should= (redirect-request GET "/redirect") true))
 
   (it "returns false for GET to other uri"
-    (-> (map->Redirect{:request {:method "GET" :uri "/redire"}})
-        (route/is-applicable)
-        (should= false)))
+    (applicable-should= (redirect-request GET "/redirec") false))
 
   (it "returns false for methods other than GET"
-    (doseq [method ["POST" "HEAD" "PUT" "OPTIONS"]]
-      (-> (map->Redirect{:request {:method method :uri "/redirect"}})
-          (route/is-applicable)
-          (should= false))))
+    (doseq [method (s/difference http-methods #{GET})]
+      (applicable-should= (redirect-request method "/redirect") false)))
 )
 
 (describe "process"
   (it "returns 302 status"
-    (-> (map->Redirect{:request {:method "GET" :uri "/redirect"}})
-        (route/process "directory-served")
-        (get :status)
-        (should= 302)))
+    (-> (redirect-request GET "/redirect")
+        (response-should-have :status 302)))
 
   (it "returns header with location /"
-    (-> (map->Redirect{:request {:method "GET" :uri "/redirect"}})
-        (route/process "directory-served")
-        (get-in [:headers "Location"])
-        (should= "/")))
+    (-> (redirect-request GET "/redirect")
+        (response-should-have-header "Location" "/")))
 
   (it "returns no body"
-    (-> (map->Redirect{:request {:method "GET" :uri "/redirect"}})
-        (route/process "directory-served")
-        (get :body)
-        (should= nil)))
+    (-> (redirect-request GET "/redirect")
+        (response-should-have :body nil)))
 )

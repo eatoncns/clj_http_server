@@ -1,37 +1,31 @@
 (ns http-server.routes.not-authorised-spec
   (:require [speclj.core :refer :all]
             [http-server.routes.not-authorised :refer :all]
-            [http-server.routes.route :as route]))
+            [http-server.routes.route :as route]
+            [http-server.spec-helper :refer :all]))
 
-(describe "is-applicable"
+(defn not-authorised-request [authorised]
+  (map->NotAuthorised {:request {:authorised authorised}}))
+
+(describe "is-applicable?"
   (it "returns true for unauthorised request"
-    (-> (map->NotAuthorised{:request {:authorised false}})
-        (route/is-applicable)
-        (should= true)))
+    (applicable-should= (not-authorised-request false) true))
 
   (it "returns false for methods on authorised request"
-    (-> (map->NotAuthorised{:request {:authorised true}})
-        (route/is-applicable)
-        (should= false)))
+    (applicable-should= (not-authorised-request true) false))
 )
 
 (describe "process"
   (it "returns 401 status"
-    (-> (map->NotAuthorised{:request {:method "GET" :uri "/coffee"}})
-        (route/process "directory-served")
-        (get :status)
-        (should= 401)))
+    (-> (not-authorised-request false)
+        (response-should-have :status 401)))
 
   (it "sets authentication header"
-    (-> (map->NotAuthorised{:request {:method "GET" :uri "/coffee"}})
-        (route/process "directory-served")
-        (get-in [:headers "WWW-Authenticate"])
-        (should= "Basic realm=authentication")))
+    (-> (not-authorised-request false)
+        (response-should-have-header "WWW-Authenticate" "Basic realm=authentication")))
 
   (it "returns no body"
-    (-> (map->NotAuthorised{:request {:method "GET" :uri "/coffee"}})
-        (route/process "directory-served")
-        (get :body)
-        (should= nil)))
+    (-> (not-authorised-request false)
+        (response-should-have :body nil)))
 )
 

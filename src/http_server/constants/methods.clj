@@ -8,4 +8,4 @@
 (def HEAD "HEAD")
 (def PATCH "PATCH")
 
-(def http-methods [GET POST PUT DELETE OPTIONS HEAD PATCH])
+(def http-methods #{GET POST PUT DELETE OPTIONS HEAD PATCH})

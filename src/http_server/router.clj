@@ -30,26 +30,29 @@
                          ->Logs
                          ->DefaultGET])
 
+(defn- is-applicable [directory-served route]
+  (route/is-applicable? route directory-served))
 
-(defn- find-route [request]
+
+(defn- find-route [request directory-served]
   (let [routes (map #(%1 request) route-constructors)]
-    (first (filter route/is-applicable routes))))
+    (first (filter (partial is-applicable directory-served) routes))))
 
 
-(defn- add-if-applicable [request allowed-methods method]
+(defn- add-if-applicable [request directory-served allowed-methods method]
   (let [request-with-method (assoc request :method method)
-        applicable-route (find-route request-with-method)]
+        applicable-route (find-route request-with-method directory-served)]
     (if (nil? applicable-route)
       allowed-methods
       (conj allowed-methods method))))
 
 
-(defn allowed-methods [request]
-  (reduce (partial add-if-applicable request) [] http-methods))
+(defn allowed-methods [request directory-served]
+  (sort (reduce (partial add-if-applicable request directory-served) [] http-methods)))
 
 
-(defn route [request]
-  (let [applicable-route (find-route request)]
+(defn route [request directory-served]
+  (let [applicable-route (find-route request directory-served)]
     (if (nil? applicable-route)
-      (->MethodNotAllowed request (allowed-methods request))
+      (->MethodNotAllowed request (allowed-methods request directory-served))
       applicable-route)))

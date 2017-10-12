@@ -1,36 +1,32 @@
 (ns http-server.routes.coffee-spec
   (:require [speclj.core :refer :all]
+            [http-server.spec-helper :refer :all]
             [http-server.routes.coffee :refer :all]
-            [http-server.routes.route :as route]))
+            [http-server.constants.methods :refer :all]
+            [http-server.routes.route :as route]
+            [clojure.set :as s]))
 
-(describe "is-applicable"
+(defn coffee-request [method uri]
+  (map->Coffee {:request {:method method :uri uri}}))
+
+(describe "is-applicable?"
   (it "returns true for GET to /coffee"
-    (-> (map->Coffee{:request {:method "GET" :uri "/coffee"}})
-        (route/is-applicable)
-        (should= true)))
+    (applicable-should= (coffee-request GET "/coffee") true))
 
   (it "returns false for GET to other uri"
-    (-> (map->Coffee{:request {:method "GET" :uri "/cof"}})
-        (route/is-applicable)
-        (should= false)))
+    (applicable-should= (coffee-request GET "/cof") false))
 
   (it "returns false for methods other than GET"
-    (doseq [method ["POST" "HEAD" "PUT" "OPTIONS"]]
-      (-> (map->Coffee{:request {:method method :uri "/coffee"}})
-          (route/is-applicable)
-          (should= false))))
+    (doseq [method (s/difference http-methods #{GET})]
+      (applicable-should= (coffee-request method "/coffee") false)))
 )
 
 (describe "process"
   (it "returns 418 status"
-    (-> (map->Coffee{:request {:method "GET" :uri "/coffee"}})
-        (route/process "directory-served")
-        (get :status)
-        (should= 418)))
+    (-> (coffee-request GET "/coffee")
+        (response-should-have :status 418)))
 
   (it "returns teapot message"
-    (-> (map->Coffee{:request {:method "GET" :uri "/coffee"}})
-        (route/process "directory-served")
-        (get :body)
-        (should= "I'm a teapot")))
+    (-> (coffee-request GET "/coffee")
+        (response-should-have :body "I'm a teapot")))
 )
