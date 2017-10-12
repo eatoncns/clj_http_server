@@ -13,6 +13,7 @@
             [http-server.routes.logs :refer [->Logs]]
             [http-server.routes.not-authorised :refer [->NotAuthorised]]
             [http-server.routes.method-not-allowed :refer [->MethodNotAllowed]]
+            [http-server.constants.methods :refer [http-methods]]
             [http-server.routes.route :as route]))
 
 (def route-constructors [->NotAuthorised
@@ -29,9 +30,11 @@
                          ->Logs
                          ->DefaultGET])
 
+
 (defn- find-route [request]
   (let [routes (map #(%1 request) route-constructors)]
     (first (filter route/is-applicable routes))))
+
 
 (defn- add-if-applicable [request allowed-methods method]
   (let [request-with-method (assoc request :method method)
@@ -40,10 +43,10 @@
       allowed-methods
       (conj allowed-methods method))))
 
-(def http-methods ["GET" "POST" "PUT" "DELETE" "OPTIONS" "HEAD" "PATCH"])
 
 (defn allowed-methods [request]
   (reduce (partial add-if-applicable request) [] http-methods))
+
 
 (defn route [request]
   (let [applicable-route (find-route request)]
