@@ -38,7 +38,7 @@
 
 (defrecord DefaultGET [request]
   route/Route
-  (is-applicable [this]
+  (is-applicable? [this directory-served]
     (= (get-in this [:request :method]) "GET"))
 
   (process [this directory-served]

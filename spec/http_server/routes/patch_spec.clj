@@ -17,16 +17,16 @@
   (->> (FakeFileInfo.)
        (process-patch request)))
 
-(describe "is-applicable"
+(describe "is-applicable?"
   (it "returns true for PATCH"
     (-> (map->Patch{:request {:method "PATCH" :uri "/patch.txt"}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (should= true)))
 
   (it "returns false for methods other than PATCH"
     (doseq [method ["GET" "POST" "HEAD" "PUT" "OPTIONS"]]
       (-> (map->Patch{:request {:method method :uri "/patch.txt"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (should= false))))
 )
 

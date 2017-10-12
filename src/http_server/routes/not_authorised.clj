@@ -5,7 +5,7 @@
 
 (defrecord NotAuthorised [request]
   route/Route
-  (is-applicable [this]
+  (is-applicable? [this directory-served]
     (not (get-in this [:request :authorised])))
 
   (process [this directory-served]

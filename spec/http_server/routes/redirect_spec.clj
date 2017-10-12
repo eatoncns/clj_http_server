@@ -3,21 +3,21 @@
             [http-server.routes.redirect :refer :all]
             [http-server.routes.route :as route]))
 
-(describe "is-applicable"
+(describe "is-applicable?"
   (it "returns true for GET to /redirect"
     (-> (map->Redirect{:request {:method "GET" :uri "/redirect"}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (should= true)))
 
   (it "returns false for GET to other uri"
     (-> (map->Redirect{:request {:method "GET" :uri "/redire"}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (should= false)))
 
   (it "returns false for methods other than GET"
     (doseq [method ["POST" "HEAD" "PUT" "OPTIONS"]]
       (-> (map->Redirect{:request {:method method :uri "/redirect"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (should= false))))
 )
 

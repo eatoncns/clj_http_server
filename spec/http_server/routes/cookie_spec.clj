@@ -4,21 +4,21 @@
             [http-server.routes.cookie :refer :all]
             [http-server.routes.route :as route]))
 
-(describe "is-applicable"
+(describe "is-applicable?"
   (it "returns true for GET to /cookie"
     (-> (map->Cookie{:request {:method "GET" :uri "/cookie"}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (rshould= true)))
 
   (it "returns false for GET to other uri"
     (-> (map->Cookie{:request {:method "GET" :uri "/cooki"}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (rshould= false)))
 
   (it "returns false for methods other than GET"
     (doseq [method ["POST" "HEAD" "PUT" "OPTIONS"]]
       (-> (map->Cookie{:request {:method method :uri "/cookie"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (rshould= false))))
 )
 

@@ -38,7 +38,7 @@
 
 (defrecord Patch [request]
   route/Route
-  (is-applicable [this]
+  (is-applicable? [this directory-served]
     (= (get-in this [:request :method]) "PATCH"))
 
   (process [this directory-served]

@@ -4,23 +4,23 @@
             [http-server.routes.route :as route]
             [http-server.spec-helper :refer [rshould=]]))
 
-(describe "is-applicable"
+(describe "is-applicable?"
   (it "returns true for GET/POST/PUT/DELETE to /form"
     (doseq [method ["GET" "POST" "PUT" "DELETE"]]
       (-> (map->Form{:request {:method method :uri "/form"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (rshould= true))))
 
   (it "returns false for other uris"
     (doseq [method ["GET" "POST" "DELETE"]]
       (-> (map->Form{:request {:method method :uri "/for"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (rshould= false))))
 
   (it "returns false for other methods"
     (doseq [method ["HEAD" "OPTIONS"]]
       (-> (map->Form{:request {:method method :uri "/form"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (rshould= false))))
 )
 

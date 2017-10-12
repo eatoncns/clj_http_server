@@ -3,17 +3,17 @@
             [http-server.routes.method-options2 :refer :all]
             [http-server.routes.route :as route]))
 
-(describe "is-applicable"
+(describe "is-applicable?"
   (it "returns true for allowed methods to /method_options2"
     (doseq [method ["GET" "OPTIONS"]]
       (-> (map->MethodOptions2{:request {:method method :uri "/method_options2"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (should= true))))
 
   (it "returns false for any method to other uri"
     (doseq [method ["POST" "HEAD" "PUT" "GET" "OPTIONS"]]
       (-> (map->MethodOptions2{:request {:method method :uri "/met"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (should= false))))
 )
 

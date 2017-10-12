@@ -11,7 +11,7 @@
 
 (defrecord Parameters [request]
   route/Route
-  (is-applicable [this]
+  (is-applicable? [this directory-served]
     (and (= (get-in this [:request :uri]) "/parameters")
          (= (get-in this [:request :method]) "GET")))
 

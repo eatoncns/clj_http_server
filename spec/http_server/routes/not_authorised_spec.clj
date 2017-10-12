@@ -3,15 +3,15 @@
             [http-server.routes.not-authorised :refer :all]
             [http-server.routes.route :as route]))
 
-(describe "is-applicable"
+(describe "is-applicable?"
   (it "returns true for unauthorised request"
     (-> (map->NotAuthorised{:request {:authorised false}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (should= true)))
 
   (it "returns false for methods on authorised request"
     (-> (map->NotAuthorised{:request {:authorised true}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (should= false)))
 )
 

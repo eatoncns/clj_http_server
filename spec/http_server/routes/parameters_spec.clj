@@ -4,21 +4,21 @@
             [http-server.routes.route :as route]
             [http-server.spec-helper :refer [rshould=]]))
 
-(describe "is-applicable"
+(describe "is-applicable?"
   (it "returns true for GET to /parameters"
     (-> (map->Parameters{:request {:method "GET" :uri "/parameters"}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (rshould= true)))
 
   (it "returns false for GET to other uri"
     (-> (map->Parameters{:request {:method "GET" :uri "/parameter"}})
-        (route/is-applicable)
+        (route/is-applicable? "directory-served")
         (rshould= false)))
 
   (it "returns false for methods other than GET"
     (doseq [method ["POST" "HEAD" "PUT" "OPTIONS"]]
       (-> (map->Parameters{:request {:method method :uri "/parameters"}})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (rshould= false))))
 )
 

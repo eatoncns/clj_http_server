@@ -20,7 +20,7 @@
           (request/parse)
           (logger/log-request)
           (auth/authorise auth-config)
-          (router/route)
+          (router/route directory-served)
           (route/process directory-served)
           (logger/log-response)
           (response/build)

@@ -4,13 +4,13 @@
             [http-server.routes.route :as route]
             [http-server.spec-helper :refer [rshould=]]))
 
-(describe "is-applicable"
+(describe "is-applicable?"
 
   (it "returns true for any request"
     (doseq [method ["GET" "POST" "HEAD" "PUT" "OPTIONS"]]
       (-> (map->MethodNotAllowed{:request {:method method :uri "/whatever"}
                                  :allowed ["GET" "POST"]})
-          (route/is-applicable)
+          (route/is-applicable? "directory-served")
           (rshould= true))))
 )
 
