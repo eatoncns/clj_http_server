@@ -1,5 +1,6 @@
 (ns http-server.router
   (:require [http-server.routes.default-get :refer [->DefaultGET]]
+            [http-server.routes.directory :refer [->Directory]]
             [http-server.routes.coffee :refer [->Coffee]]
             [http-server.routes.tea :refer [->Tea]]
             [http-server.routes.cookie :refer [->Cookie]]
@@ -28,6 +29,7 @@
                          ->Form
                          ->Patch
                          ->Logs
+                         ->Directory
                          ->DefaultGET])
 
 (defn- is-applicable [directory-served route]
