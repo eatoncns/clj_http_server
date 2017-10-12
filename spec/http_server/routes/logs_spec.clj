@@ -1,22 +1,22 @@
 (ns http-server.routes.logs-spec
   (:require [speclj.core :refer :all]
             [http-server.routes.logs :refer :all]
-            [http-server.routes.route :as route]))
+            [http-server.spec-helper :refer [applicable-should=]]
+            [http-server.routes.route :as route]
+            [http-server.constants.methods :refer :all]
+            [clojure.set :as s]))
+
+(defn logs-request [method uri]
+  (map->Logs {:request {:method method :uri uri}}))
 
 (describe "is-applicable?"
   (it "returns true for GET to /logs"
-    (-> (map->Logs{:request {:method "GET" :uri "/logs"}})
-        (route/is-applicable? "directory-served")
-        (should= true)))
+    (applicable-should= (logs-request GET "/logs") true))
 
   (it "returns false for GET to other uri"
-    (-> (map->Logs{:request {:method "GET" :uri "/log"}})
-        (route/is-applicable? "directory-served")
-        (should= false)))
+    (applicable-should= (logs-request GET "/log") false))
 
   (it "returns false for methods other than GET"
-    (doseq [method ["POST" "HEAD" "PUT" "OPTIONS"]]
-      (-> (map->Logs{:request {:method method :uri "/logs"}})
-          (route/is-applicable? "directory-served")
-          (should= false))))
+    (doseq [method (s/difference http-methods #{GET})]
+      (applicable-should= (logs-request method "/logs") false)))
 )
