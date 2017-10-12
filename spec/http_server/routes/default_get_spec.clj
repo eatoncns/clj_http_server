@@ -18,13 +18,17 @@
   (->> (FakeFileInfo.)
        (process-get request)))
 
+(defn response-should-have [route-instance field expected]
+  (->> route-instance
+       (run-get)
+       (field)
+       (should= expected)))
+
 (describe "process-get"
 
   (it "returns 200 when path is a valid directory"
-    (->> (map->Request {:uri "/dir"})
-         (run-get)
-         (:status)
-         (should= 200)))
+    (-> (map->Request {:uri "/dir"})
+        (response-should-have :status 200)))
 
   (it "returns file listing page as body for valid directory"
     (->> (map->Request {:uri "/dir"})
@@ -33,34 +37,24 @@
          (should-contain "hello.txt")))
 
   (it "returns 404 when path does not exist"
-    (->> (map->Request {:uri "/foobar"})
-         (run-get)
-         (:status)
-         (should= 404)))
+    (-> (map->Request {:uri "/foobar"})
+        (response-should-have :status 404)))
 
   (it "returns 200 when path is a file that exists"
-    (->> (map->Request {:uri "/foo.png"})
-         (run-get)
-         (:status)
-         (should= 200)))
+    (-> (map->Request {:uri "/foo.png"})
+        (response-should-have :status 200)))
 
   (it "returns file contents as body when path is a file that exists"
-    (->> (map->Request {:uri "/foo.png"})
-         (run-get)
-         (:body)
-         (should= "blah")))
+    (-> (map->Request {:uri "/foo.png"})
+        (response-should-have :body "blah")))
 
   (it "returns 206 for partial file content"
-    (->> (map->Request {:uri "/foo.png" :headers {"Range" "bytes=0-4"}})
-         (run-get)
-         (:status)
-         (should= 206)))
+    (-> (map->Request {:uri "/foo.png" :headers {"Range" "bytes=0-4"}})
+        (response-should-have :status 206)))
 
   (it "returns partial file contents as body when header requests it"
-    (->> (map->Request {:uri "/foo.png" :headers {"Range" "bytes=0-4"}})
-         (run-get)
-         (:body)
-         (should= "/foo.png 0 5")))
+    (-> (map->Request {:uri "/foo.png" :headers {"Range" "bytes=0-4"}})
+        (response-should-have :body "/foo.png 0 5")))
 
   (it "returns content-type header based on file type"
     (->> (map->Request {:uri "/foo.png"})
