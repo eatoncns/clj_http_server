@@ -2,6 +2,7 @@
   (:require [speclj.core :refer :all]
             [http-server.spec-helper :refer [rshould-be-a]]
             [http-server.router :refer :all]
+            [http-server.constants.methods :refer :all]
             [http-server.routes.default-get]
             [http-server.routes.coffee]
             [http-server.routes.tea]
@@ -36,78 +37,57 @@
 (defn build-request [method uri]
   (map->Request {:method method :uri uri :version "HTTP/1.1" :headers {} :authorised true}))
 
+(defn route-should-be-a [method uri expected]
+  (-> (build-request method uri)
+      (route "directory-served")
+      (rshould-be-a expected)))
+
 (describe "route"
 
   (it "returns a Tea for GET to /tea"
-    (-> (build-request "GET" "/tea")
-        (route "directory-served")
-        (rshould-be-a Tea)))
+    (route-should-be-a GET "/tea" Tea))
 
   (it "returns a Coffee for GET to /coffee"
-    (-> (build-request "GET" "/coffee")
-        (route "directory-served")
-        (rshould-be-a Coffee)))
+    (route-should-be-a GET "/coffee" Coffee))
 
   (it "returns a Cookie for GET to /cookie"
-    (-> (build-request "GET" "/cookie")
-        (route "directory-served")
-        (rshould-be-a Cookie)))
+    (route-should-be-a GET "/cookie" Cookie))
 
   (it "returns a EatCookie for GET to /eat_cookie"
-    (-> (build-request "GET" "/eat_cookie")
-        (route "directory-served")
-        (rshould-be-a EatCookie)))
+    (route-should-be-a GET "/eat_cookie" EatCookie))
 
   (it "returns a Parameters for GET to /parameters"
-    (-> (build-request "GET" "/parameters")
-        (route "directory-served")
-        (rshould-be-a Parameters)))
+    (route-should-be-a GET "/parameters" Parameters))
 
   (it "returns a Form for GET to /form"
-    (-> (build-request "GET" "/form")
-        (route "directory-served")
-        (rshould-be-a Form)))
+    (route-should-be-a GET "/form" Form))
 
   (it "returns a Patch for PATCH request"
-    (-> (build-request "PATCH" "/foo")
-        (route "directory-served")
-        (rshould-be-a Patch)))
+    (route-should-be-a PATCH "/foo" Patch))
 
   (it "returns a Redirect for GET to /redirect"
-    (-> (build-request "GET" "/redirect")
-        (route "directory-served")
-        (rshould-be-a Redirect)))
+    (route-should-be-a GET "/redirect" Redirect))
 
   (it "returns a MethodOptions for OPTIONS to /method_options"
-    (-> (build-request "OPTIONS" "/method_options")
-        (route "directory-served")
-        (rshould-be-a MethodOptions)))
+    (route-should-be-a OPTIONS "/method_options" MethodOptions))
 
   (it "returns a MethodOptions2 for OPTIONS to /method_options2"
-    (-> (build-request "OPTIONS" "/method_options2")
-        (route "directory-served")
-        (rshould-be-a MethodOptions2)))
+    (route-should-be-a OPTIONS "/method_options2" MethodOptions2))
 
   (it "returns a Logs for GET to /logs"
-    (-> (build-request "GET" "/logs")
-        (route "directory-served")
-        (rshould-be-a Logs)))
+    (route-should-be-a GET "/logs" Logs))
+
+  (it "returns a DefaultGET for GET request"
+    (route-should-be-a GET "/whatever" DefaultGET))
+
+  (it "returns MethodNotAllowed for other requests"
+    (route-should-be-a POST "/whatever" MethodNotAllowed))
 
   (it "returns NotAuthorised for unauthorised route"
-    (-> (build-request "GET" "/whatver")
+    (-> (build-request GET "/whatver")
         (assoc :authorised false)
         (route "directory-served")
         (rshould-be-a NotAuthorised)))
-
-  (it "returns a DefaultGET for GET request"
-    (-> (build-request "GET" "/whatever")
-        (route "directory-served")
-        (rshould-be-a DefaultGET)))
-
-  (it "returns MethodNotAllowed for other requests"
-    (-> (build-request "POST" "/whatever")
-        (route "directory-served")
-        (rshould-be-a MethodNotAllowed)))
 )
 
 (describe "allowed-methods"
