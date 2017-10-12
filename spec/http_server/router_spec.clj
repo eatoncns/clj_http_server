@@ -1,9 +1,9 @@
 (ns http-server.router-spec
   (:require [speclj.core :refer :all]
-            [http-server.spec-helper :refer [rshould-be-a]]
+            [http-server.spec-helper :refer [rshould= rshould-be-a]]
             [http-server.router :refer :all]
             [http-server.constants.methods :refer :all]
-            [http-server.routes.default-get]
+            [http-server.routes.not-found]
             [http-server.routes.coffee]
             [http-server.routes.tea]
             [http-server.routes.cookie]
@@ -18,7 +18,7 @@
             [http-server.routes.not-authorised]
             [http-server.routes.method-not-allowed]
             [http-server.request :refer [map->Request]])
-  (:import [http_server.routes.default_get DefaultGET]
+  (:import [http_server.routes.not_found NotFound]
            [http_server.routes.coffee Coffee]
            [http_server.routes.tea Tea]
            [http_server.routes.cookie Cookie]
@@ -77,8 +77,8 @@
   (it "returns a Logs for GET to /logs"
     (route-should-be-a GET "/logs" Logs))
 
-  (it "returns a DefaultGET for GET request"
-    (route-should-be-a GET "/whatever" DefaultGET))
+  (it "returns a NotFound for GET request"
+    (route-should-be-a GET "/whatever" NotFound))
 
   (it "returns MethodNotAllowed for other requests"
     (route-should-be-a POST "/whatever" MethodNotAllowed))
@@ -95,5 +95,5 @@
   (it "returns list of allowed methods for a uri"
     (-> (build-request "PATCH" "/form")
         (allowed-methods "directory-served")
-        (should= ["DELETE" "GET" "PATCH" "POST" "PUT"])))
+        (rshould= ["DELETE" "GET" "HEAD" "PATCH" "POST" "PUT"])))
 )
