@@ -9,6 +9,7 @@
                206 "Partial Content"
                401 "Unauthorized"
                404 "Not Found"
+               405 "Method Not Allowed"
                412 "Precondition Failed"
                418 "I'm a teapot"
                422 "Unprocessable Entity"})
