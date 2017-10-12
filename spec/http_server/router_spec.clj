@@ -3,7 +3,6 @@
             [http-server.utils.functional :as func]
             [http-server.router :refer :all]
             [http-server.routes.default-get]
-            [http-server.routes.default]
             [http-server.routes.coffee]
             [http-server.routes.tea]
             [http-server.routes.cookie]
@@ -16,9 +15,9 @@
             [http-server.routes.method-options2]
             [http-server.routes.logs]
             [http-server.routes.not-authorised]
+            [http-server.routes.method-not-allowed]
             [http-server.request :refer [map->Request]])
   (:import [http_server.routes.default_get DefaultGET]
-           [http_server.routes.default Default]
            [http_server.routes.coffee Coffee]
            [http_server.routes.tea Tea]
            [http_server.routes.cookie Cookie]
@@ -31,6 +30,7 @@
            [http_server.routes.method_options2 MethodOptions2]
            [http_server.routes.logs Logs]
            [http_server.routes.not_authorised NotAuthorised]
+           [http_server.routes.method_not_allowed MethodNotAllowed]
            [http_server.request Request]))
 
 (defn build-request [method uri]
@@ -104,10 +104,17 @@
          (route)
          (should-be-a DefaultGET)))
 
-
-  (it "returns a Default for other requests"
+  (it "returns MethodNotAllowed for other requests"
     (->> (build-request "POST" "/whatever")
          (route)
-         (should-be-a Default)))
+         (should-be-a MethodNotAllowed)))
+
 )
 
+(describe "allowed-methods"
+
+  (it "returns list of allowed methods for a uri"
+    (->> (build-request "PATCH" "/form")
+         (allowed-methods)
+         (should= ["GET" "POST" "PUT" "DELETE" "PATCH"])))
+)
