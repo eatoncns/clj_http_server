@@ -1,8 +1,7 @@
 (ns http-server.routes.logs
   (:require [http-server.routes.route :as route]
             [http-server.response :refer [map->Response]]
-            [http-server.logger :as logger])
-  (:import [http_server.response Response]))
+            [http-server.logger :as logger]))
 
 (defrecord Logs [request]
   route/Route

@@ -1,8 +1,7 @@
 (ns http-server.routes.method-not-allowed
   (:require [http-server.routes.route :as route]
             [http-server.response :refer [map->Response]]
-            [clojure.string :as string])
-  (:import [http_server.response Response]))
+            [clojure.string :as string]))
 
 (defn- append-method [current method]
   (str current method ", "))

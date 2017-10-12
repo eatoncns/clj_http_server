@@ -1,7 +1,6 @@
 (ns http-server.routes.parameters
   (:require [http-server.routes.route :as route]
-            [http-server.response :refer [map->Response]])
-  (:import [http_server.response Response]))
+            [http-server.response :refer [map->Response]]))
 
 (defn- add-param [param-string k v]
   (str param-string k " = " v "\r\n"))

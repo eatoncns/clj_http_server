@@ -1,8 +1,7 @@
 (ns http-server.routes.method-options2
   (:require [http-server.routes.route :as route]
             [http-server.response :refer [map->Response]]
-            [http-server.utils.functional :refer [in?]])
-  (:import [http_server.response Response]))
+            [http-server.utils.functional :refer [in?]]))
 
 (defrecord MethodOptions2 [request]
   route/Route

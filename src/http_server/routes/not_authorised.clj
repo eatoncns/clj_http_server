@@ -1,7 +1,6 @@
 (ns http-server.routes.not-authorised
   (:require [http-server.routes.route :as route]
-            [http-server.response :refer [map->Response]])
-  (:import [http_server.response Response]))
+            [http-server.response :refer [map->Response]]))
 
 (defrecord NotAuthorised [request]
   route/Route

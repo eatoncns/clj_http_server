@@ -1,8 +1,7 @@
 (ns http-server.routes.form
   (:require [http-server.routes.route :as route]
             [http-server.response :refer [map->Response]]
-            [http-server.utils.functional :refer [in?]])
-  (:import [http_server.response Response]))
+            [http-server.utils.functional :refer [in?]]))
 
 (def data (atom nil))
 
