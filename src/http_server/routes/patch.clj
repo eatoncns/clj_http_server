@@ -4,8 +4,7 @@
             [http-server.utils.file-info :as fi]
             [http-server.utils.sha1 :as sha1]
             [http-server.constants.errors :as err])
-  (:import [http_server.response Response]
-           [http_server.utils.file_info FileInfoAtRoot]))
+  (:import [http_server.utils.file_info FileInfoAtRoot]))
 
 (defn- do-patch [request file-info]
   (let [body (:body request)

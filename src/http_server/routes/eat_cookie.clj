@@ -2,8 +2,7 @@
   (:require [http-server.routes.route :as route]
             [http-server.response :refer [map->Response]]
             [http-server.utils.functional :as func]
-            [clojure.string :as string])
-  (:import [http_server.response Response]))
+            [clojure.string :as string]))
 
 (defn- parse-cookie [cookie-map cookie-string]
   (func/split-map cookie-map cookie-string #"="))

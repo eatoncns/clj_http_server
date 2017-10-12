@@ -6,8 +6,11 @@
             [http-server.constants.methods :refer :all]
             [clojure.set :as s]))
 
-(defn cookie-request [method uri]
-  (map->Cookie {:request {:method method :uri uri}}))
+(defn cookie-request
+  ([method uri]
+    (cookie-request method uri {}))
+  ([method uri params]
+    (map->Cookie {:request {:method method :uri uri :params params}})))
 
 (describe "is-applicable?"
   (it "returns true for GET to /cookie"
@@ -31,9 +34,7 @@
         (response-should-have :body "Eat")))
 
   (it "returns Set-Cookie header"
-    (-> (map->Cookie{:request {:method "GET" :uri "/cookie" :params {"type" "chocolate"}}})
-        (route/process "directory-served")
-        (get-in [:headers "Set-Cookie"])
-        (rshould= "type=chocolate")))
+    (-> (cookie-request GET "/cookie" {"type" "chocolate"})
+        (response-should-have-header "Set-Cookie" "type=chocolate")))
 )
 

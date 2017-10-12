@@ -1,6 +1,7 @@
 (ns http-server.routes.directory
   (:require [http-server.routes.route :as route]
-            [http-server.response :refer [map->Response content-type]]
+            [http-server.response :refer [map->Response]]
+            [http-server.constants.content-type :refer [content-type]]
             [http-server.utils.functional :refer [in?]]
             [http-server.constants.methods :refer :all]
             [http-server.utils.file-info :as fi]
