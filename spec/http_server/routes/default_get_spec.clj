@@ -7,8 +7,6 @@
 
 (defrecord FakeFileInfo []
   fi/FileInfo
-  (is-directory? [this path] (= path "/dir"))
-  (list-files [this path] ["hello.txt" "image.png" "file1"])
   (file-exists? [this path] (= path "/foo.png"))
   (file-length [this path] 100)
   (file-data [this path] "blah")
@@ -25,16 +23,6 @@
        (should= expected)))
 
 (describe "process-get"
-
-  (it "returns 200 when path is a valid directory"
-    (-> (map->Request {:uri "/dir"})
-        (response-should-have :status 200)))
-
-  (it "returns file listing page as body for valid directory"
-    (->> (map->Request {:uri "/dir"})
-         (run-get)
-         (:body)
-         (should-contain "hello.txt")))
 
   (it "returns 404 when path does not exist"
     (-> (map->Request {:uri "/foobar"})

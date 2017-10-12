@@ -19,10 +19,6 @@
 (defn process-get [request file-info]
   (let [path (get request :uri)]
     (cond
-      (fi/is-directory? file-info path)
-        (map->Response {:status 200
-                        :headers (content-type "html")
-                        :body (html/list-of-links (fi/list-files file-info path))})
       (and (fi/file-exists? file-info path) (requests-range? request))
         (map->Response {:status 206
                         :headers (content-type (fi/extension path))
