@@ -1,6 +1,7 @@
 (ns http-server.constants.reasons)
 
 (def reasons { 200 "OK"
+               204 "No Content"
                206 "Partial Content"
                401 "Unauthorized"
                404 "Not Found"

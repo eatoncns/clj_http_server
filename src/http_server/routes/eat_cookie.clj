@@ -2,6 +2,7 @@
   (:require [http-server.routes.route :as route]
             [http-server.response :refer [map->Response]]
             [http-server.utils.functional :as func]
+            [http-server.constants.content-type :refer [content-type]]
             [clojure.string :as string]))
 
 (defn- parse-cookie [cookie-map cookie-string]
@@ -27,6 +28,6 @@
 
   (process [this directory-served]
     (map->Response {:status 200
-                    :headers {}
+                    :headers (content-type "text")
                     :body (str "mmmm " (cookie-type (get-in this [:request :headers])))}))
 )
