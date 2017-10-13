@@ -78,4 +78,8 @@
   (it "returns partial file contents as body when header requests it"
     (-> (request GET "/foo.png" {"Range" "bytes=0-4"})
         (response-should-have :body "/foo.png 0 5")))
+
+  (it "returns range header in response for partial content"
+    (-> (request GET "/foo.png" {"Range" "bytes=0-4"})
+        (response-should-have-header "Content-Range" "bytes 0-4/100")))
 )

@@ -28,6 +28,6 @@
 
   (process [this directory-served]
     (map->Response {:status 200
-                    :headers (content-type "text")
+                    :headers (content-type "txt")
                     :body (str "mmmm " (cookie-type (get-in this [:request :headers])))}))
 )

@@ -21,4 +21,10 @@
          (build)
          (String.)
          (should-contain #"stuff$")))
+
+  (it "adds content-length header to response with body"
+    (->> (map->Response {:status 200 :headers {} :body "stuff"})
+         (build)
+         (String.)
+         (should-contain #"Content-Length: 5\r\n")))
 )
