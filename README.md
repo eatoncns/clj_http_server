@@ -25,8 +25,9 @@ To run the http server on it's own
     cd clj_http_server
     lein run -d <path to cob_spec>/public
 
-The server will start at [localhost:5000](http://localhost:5000)
-
+The server will start at [localhost:5000](http://localhost:5000). Logs can be
+found in `/tmp/server-log.txt`.
+ 
 To run http server unit tests
 
     cd clj_http_server
