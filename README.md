@@ -1,6 +1,6 @@
 # HTTP Server
 
-A basic http server implementation based on [Cob Spec acceptance tests](https://github.com/8thlight/cob_spec).
+A basic http server implementation based on [Cob Spec acceptance tests](https://github.com/eatoncns/cob_spec).
 
 ## Requirements
 
