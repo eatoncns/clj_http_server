@@ -17,7 +17,7 @@
   (process [this directory-served]
     (let [cookie (reduce-kv build-cookie "" (get-in this [:request :params]))]
       (map->Response {:status 200
-                      :headers (merge {"Set-Cookie" cookie} (content-type "text"))
+                      :headers (merge {"Set-Cookie" cookie} (content-type "txt"))
                       :body "Eat"})))
 )
 

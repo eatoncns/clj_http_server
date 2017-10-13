@@ -11,5 +11,5 @@
          (= (get-in this [:request :method]) GET)))
 
   (process [this directory-served]
-    (map->Response {:status 418 :headers (content-type "text") :body "I'm a teapot"}))
+    (map->Response {:status 418 :headers (content-type "txt") :body "I'm a teapot"}))
 )
