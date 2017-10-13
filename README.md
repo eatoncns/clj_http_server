@@ -2,6 +2,13 @@
 
 A basic http server implementation based on [Cob Spec acceptance tests](https://github.com/8thlight/cob_spec).
 
+## Requirements
+
+- [Java](https://www.java.com/en/)
+- [Clojure](https://clojure.org/)
+- [Leiningen](https://leiningen.org/)
+- [Maven](https://maven.apache.org/) for cob spec
+
 ## Running
 
 To get code and acceptance tests
