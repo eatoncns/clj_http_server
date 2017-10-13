@@ -36,3 +36,12 @@ To create jar for use by cob spec
 This will produce two jar files in /target folder.
 
 To run cob spec server follow instructions on [project page](https://github.com/8thlight/cob_spec). The jar file to point to is the http-server-0.1.0-standalone.jar generated in the previous step.
+
+**NOTE:** I have experienced some issues on first run of cob spec suites.
+Investigation suggests that server process is not starting within the [sleep
+time](https://github.com/8thlight/cob_spec/blob/master/src/main/java/Server.java) defined in the cob spec startup which leads to failures.
+It also means process is not killed in teardown, resulting in subsequent runs
+working ok. 
+
+As a workaround the server can be manually started before first run of the
+tests. 
