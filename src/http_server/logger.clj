@@ -1,17 +1,20 @@
 (ns http-server.logger
   (:require [clojure.java.io :as io]
-            [taoensso.timbre :as timbre :refer [info]]
-            [taoensso.timbre.appenders.core :as appenders]))
+            [clj-logging-config.log4j :as log-config]
+            [clojure.tools.logging :as logging]))
 
 (def log-file-name "/tmp/server-log.txt")
 (io/delete-file log-file-name :quiet)
-(timbre/merge-config! {:appenders {:spit (appenders/spit-appender {:fname log-file-name})}})
+(log-config/set-logger! :out (org.apache.log4j.FileAppender.
+                             (org.apache.log4j.EnhancedPatternLayout. org.apache.log4j.EnhancedPatternLayout/TTCC_CONVERSION_PATTERN)
+                             log-file-name
+                             true))
 
 (defn log [msg]
-  (info msg))
+  (logging/info msg))
 
 (defn log-request [request]
-  (info (str (:method request) " "
+  (logging/info (str (:method request) " "
              (:uri request) " "
              (:version request) " "
              (:params request) " "
@@ -20,7 +23,7 @@
   request)
 
 (defn log-response [response]
-  (info (str (:status response) " "
+  (logging/info (str (:status response) " "
              (:headers response) " "
              (:body response)))
   response)
