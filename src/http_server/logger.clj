@@ -11,6 +11,7 @@
                              true))
 
 (defn log [msg]
+  (println msg)
   (logging/info msg))
 
 (defn log-request [request]
